@@ -4,5 +4,5 @@ Hackathon project for Ragnarok Hackathon 2026.
 
 ## Structure
 
-- \rontend/\ — Next.js web application
-- \ackend/\ — Backend service (coming soon)
+- \Frontend/\ — Next.js web application
+- \Backend/\ — Backend service (coming soon)
