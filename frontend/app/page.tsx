@@ -15,6 +15,7 @@ import GuardrailMonitor from "@/components/GuardrailMonitor";
 import GuardrailAuditTable from "@/components/GuardrailAuditTable";
 import CitationDrawer from "@/components/CitationDrawer";
 import NoticeModal from "@/components/NoticeModal";
+import HeroSection from "@/components/HeroSection";
 import RidgelineDitherFooter from "@/components/ui/ridgeline-dither-footer";
 import { CheckpointDate, Citation, ActionNotice } from "@/lib/types";
 
@@ -53,15 +54,18 @@ export default function Home() {
 
       {/* Centered Structured Frame (1120px max-width, matching Footer boundaries) */}
       <div className="w-full max-w-[1120px] mx-auto border-x border-[#dce8e1] bg-white min-h-screen flex flex-col shadow-2xs">
-        {/* Top Navbar: Brand + Active Clock + Action */}
+        {/* Top Navbar: Brand + Center Links + Active Clock + Action */}
         <Navbar
           currentCheckpoint={currentCheckpoint}
           onSelectCheckpoint={setCurrentCheckpoint}
           onTriggerAnalysis={handleTriggerAnalysis}
         />
 
+        {/* Hero Section: Classical Landscape Banner, Serif Headline, Dual CTAs, 8-Partner Border Strip */}
+        <HeroSection onTriggerAnalysis={handleTriggerAnalysis} />
+
         {/* Main Single-Page Content Container */}
-        <main className="w-full px-[clamp(20px,3.2vw,30px)] py-6 sm:py-8 space-y-6 sm:space-y-8 flex-1">
+        <main id="war-room" className="w-full px-[clamp(20px,3.2vw,30px)] py-6 sm:py-8 space-y-6 sm:space-y-8 flex-1">
           {/* Executive Banner & System KPI Header */}
           <section className="bg-[#f3f8f5] border border-[#dce8e1] rounded-xl p-5 sm:p-7">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -152,7 +156,7 @@ export default function Home() {
           </section>
 
           {/* Section 1: FR9.2 Temporal Checkpoint Scrubber */}
-          <section aria-label="Temporal Checkpoint Slider">
+          <section id="timeline" aria-label="Temporal Checkpoint Slider">
             <TimeSlider
               currentCheckpoint={currentCheckpoint}
               onSelectCheckpoint={setCurrentCheckpoint}
@@ -160,7 +164,7 @@ export default function Home() {
           </section>
 
           {/* Section 2: FR9.1 Interactive Contract Graph */}
-          <section aria-label="Contract Relationship Graph">
+          <section id="graph" aria-label="Contract Relationship Graph">
             <ContractGraph
               checkpoint={currentCheckpoint}
               onSelectCitation={setActiveCitation}
@@ -177,7 +181,7 @@ export default function Home() {
           </section>
 
           {/* Section 4: FR9.4 Live Multi-Agent Debate Arena */}
-          <section aria-label="Multi-Agent Debate Arena">
+          <section id="agents" aria-label="Multi-Agent Debate Arena">
             <DebatePanel onOpenCitation={setActiveCitation} />
           </section>
 
@@ -191,7 +195,7 @@ export default function Home() {
           </section>
 
           {/* Section 6: Differentiator - The 14 Traps Scoreboard */}
-          <section aria-label="The 14 Traps Matrix">
+          <section id="traps" aria-label="The 14 Traps Matrix">
             <TrapScoreboard onOpenCitation={setActiveCitation} />
           </section>
 
@@ -201,7 +205,7 @@ export default function Home() {
           </section>
 
           {/* Section 8: Differentiator - 5-Layer Deterministic Guardrail Telemetry */}
-          <section aria-label="5-Layer Guardrail Monitor">
+          <section id="guardrails" aria-label="5-Layer Guardrail Monitor">
             <GuardrailMonitor />
           </section>
 
