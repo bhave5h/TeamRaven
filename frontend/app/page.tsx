@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Preloader from "@/components/Preloader";
 import Navbar from "@/components/Navbar";
 import TimeSlider from "@/components/TimeSlider";
 import ContractGraph from "@/components/ContractGraph";
@@ -46,6 +47,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#ffffff] dark:bg-[#09090b] text-[#191919] dark:text-[#f4f4f6] flex flex-col transition-colors duration-200 pb-20">
+      {/* Tactical Entry Preloader */}
+      <Preloader />
+
       {/* Top Navbar: Brand + Active Clock + Action + Theme Toggle */}
       <Navbar
         currentCheckpoint={currentCheckpoint}

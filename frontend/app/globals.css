@@ -7,11 +7,18 @@
 @theme {
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'P22 Mackinac W01 Book', Georgia, Cambria, 'Times New Roman', serif;
+  --color-primary: var(--primary);
+  --color-muted: var(--muted);
+  --color-destructive: #e11d48;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 }
 
 :root {
   --background: #ffffff;
   --foreground: #191919;
+  --primary: #191919;
+  --muted: #9ca3af;
   --card-bg: #ffffff;
   --card-border: #e5e7eb;
   --subtle-bg: #f4f3f3;
@@ -23,6 +30,8 @@
 .dark {
   --background: #09090b;
   --foreground: #f4f4f6;
+  --primary: #ffffff;
+  --muted: #40404a;
   --card-bg: #121216;
   --card-border: #22222a;
   --subtle-bg: #181820;
