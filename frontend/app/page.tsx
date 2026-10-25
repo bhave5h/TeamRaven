@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import TimeSlider from "@/components/TimeSlider";
 import ContractGraph from "@/components/ContractGraph";
 import ExposureGauge from "@/components/ExposureGauge";
+import RiskHeatmap from "@/components/RiskHeatmap";
 import DebatePanel from "@/components/DebatePanel";
 import AlertActionPanel from "@/components/AlertActionPanel";
 import TrapScoreboard from "@/components/TrapScoreboard";
@@ -160,8 +161,12 @@ export default function Home() {
         </section>
 
         {/* Section 3: FR9.3 Financial Exposure & Recovery Waterfall */}
-        <section aria-label="Financial Exposure Gauges">
+        <section aria-label="Financial Exposure Gauges" className="space-y-6">
           <ExposureGauge checkpoint={currentCheckpoint} />
+          <RiskHeatmap
+            checkpoint={currentCheckpoint}
+            onOpenCitation={setActiveCitation}
+          />
         </section>
 
         {/* Section 4: FR9.4 Live Multi-Agent Debate Arena */}

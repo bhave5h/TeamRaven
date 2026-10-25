@@ -1,31 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useSyncExternalStore } from "react";
+
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getSnapshot() {
+  if (typeof window === "undefined") return true;
+  const saved = localStorage.getItem("odin-theme");
+  return saved ? saved === "dark" : true;
+}
+
+function getServerSnapshot() {
+  return true;
+}
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    // Check localStorage or system preference
-    const savedTheme = localStorage.getItem("odin-theme");
-    if (savedTheme === "dark") {
-      setIsDark(true);
-      document.documentElement.classList.add("dark");
-    } else if (savedTheme === "light") {
-      setIsDark(false);
-      document.documentElement.classList.remove("dark");
-    } else {
-      // Default to dark theme for high-end War Room tactical aesthetic
-      setIsDark(true);
-      document.documentElement.classList.add("dark");
-    }
-  }, []);
+  const isDark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   const toggleTheme = () => {
     const nextDark = !isDark;
-    setIsDark(nextDark);
     if (nextDark) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("odin-theme", "dark");
@@ -33,6 +30,7 @@ export default function ThemeToggle() {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("odin-theme", "light");
     }
+    window.dispatchEvent(new Event("storage"));
   };
 
   if (!mounted) {

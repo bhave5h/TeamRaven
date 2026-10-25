@@ -75,3 +75,69 @@ body {
 .btn-secondary {
   @apply px-4 py-2 border border-gray-200 dark:border-[#22222a] bg-white dark:bg-[#121216] text-[#191919] dark:text-[#f4f4f6] text-xs font-medium rounded-lg hover:bg-[#F4F3F3] dark:hover:bg-[#181820] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center;
 }
+
+/* Custom Temporal Range Slider */
+input[type="range"].temporal-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+}
+
+input[type="range"].temporal-slider:focus {
+  outline: none;
+}
+
+input[type="range"].temporal-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: transparent;
+}
+
+input[type="range"].temporal-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background: #191919;
+  border: 3px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1);
+  margin-top: -7px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: grab;
+}
+
+.dark input[type="range"].temporal-slider::-webkit-slider-thumb {
+  background: #ffffff;
+  border: 3px solid #09090b;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7), 0 0 0 2px #26262e;
+}
+
+input[type="range"].temporal-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type="range"].temporal-slider::-webkit-slider-thumb:active {
+  transform: scale(1.25);
+  cursor: grabbing;
+}
+
+input[type="range"].temporal-slider::-moz-range-thumb {
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background: #191919;
+  border: 3px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease;
+  cursor: grab;
+}
+
+.dark input[type="range"].temporal-slider::-moz-range-thumb {
+  background: #ffffff;
+  border: 3px solid #09090b;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+}
+
