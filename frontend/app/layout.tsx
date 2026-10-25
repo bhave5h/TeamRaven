@@ -2,11 +2,33 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Odin: The Contract War Room | Autonomous Multi-Agent Intelligence",
+  title: "Odin Force: Autonomous Multi-Agent Contract Intelligence",
   description:
-    "Autonomous Multi-Agent Contract Intelligence and Adversarial Arbitration System for Quillhub Inc. Hackathon Submission for RAGNAROK 2026 — Problem Statement 2.",
+    "Odin Force — Autonomous Multi-Agent Contract Intelligence & Adversarial Arbitration System. Four specialized AI agents defend enterprise portfolios against hidden traps, liabilities, and revenue leakage.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
+  openGraph: {
+    title: "Odin Force: Autonomous Multi-Agent Contract Intelligence",
+    description: "AI agents that defend all your enterprise contracts in real time.",
+    siteName: "Odin Force",
+    images: [
+      {
+        url: "/bg1.png",
+        width: 1200,
+        height: 630,
+        alt: "Odin Force Classical Tapestry Landscape",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Odin Force: Autonomous Multi-Agent Contract Intelligence",
+    description: "AI agents that defend all your enterprise contracts in real time.",
+    images: ["/bg1.png"],
   },
 };
 

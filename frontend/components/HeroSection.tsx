@@ -15,7 +15,7 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
       <div className="relative w-full border-b border-[#dce8e1] overflow-hidden bg-[#f3f8f5]">
         <div className="relative w-full h-[280px] sm:h-[380px] md:h-[440px] lg:h-[490px]">
           <Image
-            src="/bg1.png"
+            src="/bg.png"
             alt="Classical Temple & Landscape tapestry dither"
             fill
             priority
@@ -25,22 +25,20 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* 2. Headline & Interactive Folder Showcase */}
-      <div className="m-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-1 items-center justify-between">
-          {/* Left Column: Big Serif Display Heading */}
-          <div className="lg:col-span-7">
-            
-            <h1 className="font-serif font-normal text-3xl sm:text-4xl md:text-[42px] lg:text-[46px] text-[#14211a] tracking-tight leading-[1.12]">
-              AI agents that defend<br className="hidden sm:inline" /> all your enterprise contracts
+      {/* 2. Compact Headline & Interactive Folder Row */}
+      <div className="w-full px-[clamp(20px,3.2vw,30px)] py-4 sm:py-6">
+        <div className="flex items-center justify-between gap-4 sm:gap-8 max-w-4xl">
+          {/* Left: 2-Line Serif Display Heading */}
+          <div className="min-w-0">
+            <h1 className="font-serif font-normal text-2xl sm:text-3xl md:text-[38px] lg:text-[42px] text-[#14211a] tracking-tight leading-[1.14]">
+              AI agents that defend<br />
+              <span className="whitespace-nowrap">all your enterprise contracts</span>
             </h1>
           </div>
 
-          {/* Right Column: Interactive Contract Folder */}
-          <div className="lg:col-span-1 flex items-center justify-center lg:justify-start overflow-visible">
-            <div className="scale-30 sm:scale-30 lg:scale-40 transition-transform origin-center lg:origin-left">
-              <FolderComponent color="black" size="md" />
-            </div>
+          {/* Right: Interactive Contract Folder (Beside Headline) */}
+          <div className="shrink-0 flex items-center justify-center overflow-visible">
+            <FolderComponent color="black" size="xs" />
           </div>
         </div>
       </div>

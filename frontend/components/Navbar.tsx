@@ -20,9 +20,9 @@ export default function Navbar({
       <a href="/" className="flex items-center gap-2 select-none group">
       
           {/* 8-Pointed Starburst / Asterisk Glyph */}
-        <Image src="/logo.png" alt="" width={24} height={24} />
+        <Image src="/logo.png" alt="Odin Force Logo" width={24} height={24} />
         <span className="font-sans font-bold text-lg tracking-tight text-[#14211a] lowercase">
-          odin's Vault
+          odin force
         </span>
       </a>
     </header>

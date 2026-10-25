@@ -7,6 +7,12 @@ import {
   AlertItem,
   ActionNotice,
   FinancialMetric,
+  ExtractionItem,
+  RulingItem,
+  QuarantinedItem,
+  ArithmeticOverride,
+  AgentTransition,
+  WorkstreamPlan,
 } from "./types";
 
 export const CHECKPOINTS: { date: CheckpointDate; label: string; description: string }[] = [
@@ -1197,4 +1203,124 @@ Pursuant to Section 14.1 of Standard Master Terms (STD) and company notice guide
       matchScore: 100,
     },
   },
+];
+
+export const ODIN_FORCE_EXTRACTIONS: ExtractionItem[] = [
+  {
+    contract: "A2 (Hosting SLA)",
+    field: "Exclusivity Covenant",
+    value: "Supplier shall not provide Services to any competitor of Customer within Territory",
+    confidence: 0.94,
+    citationKey: "c1",
+    flag: "",
+  },
+  {
+    contract: "A3 (Amendment No. 1)",
+    field: "Amendment Scope",
+    value: "Amends Section 4 of Master Agreement only; supersedes conflicting terms",
+    confidence: 0.97,
+    citationKey: "c2",
+    flag: "",
+  },
+  {
+    contract: "B1 (Harbor Services)",
+    field: "Cyber Insurance & Lapse Notice",
+    value: "$2,000,000 minimum cyber coverage; 5-business-day written lapse notice",
+    confidence: 0.91,
+    citationKey: "c3",
+    flag: "",
+  },
+  {
+    contract: "B2 (Logistics Agreement)",
+    field: "Exhibit Dependencies",
+    value: "Exhibits A–C referenced in §4 deemed-acceptance but missing from bundle",
+    confidence: 0.40,
+    citationKey: "c4",
+    flag: "Ambiguous: Missing Exhibits A-C",
+  },
+  {
+    contract: "C1 (Vantage SaaS)",
+    field: "Effective Date & Term",
+    value: "Effective date left blank in contract header; notice window unanchored",
+    confidence: 0.30,
+    citationKey: "c5",
+    flag: "Ambiguous: Blank Effective Date",
+  },
+];
+
+export const ODIN_FORCE_RULINGS: RulingItem[] = [
+  {
+    claim: "Harbor insurance lapse constitutes immediate actionable breach",
+    lokiAttack: "Attack: Breach occurred due to 5-day notice window lapse exceeding calendar bar date",
+    heimdallEvidence: "Event log confirms lapse commenced May 28; notice window closed June 6",
+    verdict: "TRUE",
+    rationale: "Clause §9.3 strict wording corroborated by operational event telemetry. Precedence applies.",
+  },
+  {
+    claim: "Amendment A3 revokes exclusivity restrictions in A2 §7.2",
+    lokiAttack: "Attack: A3 supersedes all conflicting operational constraints across hosting agreement",
+    heimdallEvidence: "A3 §1 explicitly amends Section 4 only; Section 7.2 remains untouched and binding",
+    verdict: "FALSE",
+    rationale: "Deterministic verbatim quote verification confirms exclusivity covenant remains in full legal force.",
+  },
+  {
+    claim: "Exclusivity covenant in A2 blocks execution of StratoNode enterprise expansion",
+    lokiAttack: "Attack: StratoNode customer base directly overlaps with prohibited competitive scope",
+    heimdallEvidence: "Territory and service taxonomy matching confirms bilateral competitive collision",
+    verdict: "VALID",
+    rationale: "Section 7.2 covenant binds Quillhub; proceeding without waiver creates $24,000 exposure.",
+  },
+];
+
+export const QUARANTINED_INPUTS: QuarantinedItem[] = [
+  {
+    source: "Event Drop 2, Line 8",
+    payload: '{"event_id": "EVT-8902", "timestamp": "2027-08-14T10:00:00Z", "payload": {CORRUPTED_HEX_BUFFER',
+    reason: "Malformed unparseable JSON stream. Isolated into quarantine vault without halting ingestion.",
+  },
+  {
+    source: "Contract C1, Header",
+    payload: "Effective Date: [___________, 2026]",
+    reason: "Unexecuted blank date literal. Flagged as Ambiguous Date Constraint; fallback to delivery timestamp.",
+  },
+];
+
+export const ARITHMETIC_OVERRIDES: ArithmeticOverride[] = [
+  {
+    item: "B1 Penalty Accrual (Harbor)",
+    llmValue: "$5,800.00 (LLM mental math)",
+    pythonValue: "$6,000.00 (Deterministic Python engine)",
+  },
+  {
+    item: "A2 Upstream Credit (StratoNode)",
+    llmValue: "$2,300.00 (LLM rounding error)",
+    pythonValue: "$2,400.00 (Deterministic Python engine)",
+  },
+  {
+    item: "Net Portfolio Leakage (Mar 15)",
+    llmValue: "$3,500.00 (LLM hallucinated estimate)",
+    pythonValue: "$3,600.00 (Deterministic Python engine)",
+  },
+];
+
+export const AGENT_TRANSITIONS: AgentTransition[] = [
+  { from: "Odin Force", to: "Thor (Extractor)", action: "Ingest and extract all 6 commercial contracts" },
+  { from: "Thor", to: "Norns (Timeline)", action: "Pass verified dates, deadlines, and penalty amounts" },
+  { from: "Norns", to: "Loki (Adversary)", action: "Supply chronological timeline & worst-case projection" },
+  { from: "Loki", to: "Thor (Extractor)", action: "Request re-extraction of C1 ambiguous effective date" },
+  { from: "Thor", to: "Loki (Adversary)", action: "Re-extracted clause delivered (confidence 30%, flagged)" },
+  { from: "Loki", to: "Heimdall (Radar)", action: "Adversarial liability attacks transmitted for factual audit" },
+  { from: "Heimdall", to: "Tyr (Arbiter)", action: "Submit verified operational logs & disputed exclusivity claims" },
+  { from: "Tyr", to: "Odin Force", action: "Render binding legal rulings & dispatch ready-to-sign notices" },
+  { from: "Odin Force", to: "Synthesis Engine", action: "Generate executive risk dossier & 14-trap scoreboard" },
+];
+
+export const WORKSTREAM_PLANS: WorkstreamPlan[] = [
+  { streamId: "A1", label: "A1 — StratoNode Master", steps: "Thor → Norns → Loki → Heimdall → Tyr", progress: 100, status: "complete" },
+  { streamId: "A2", label: "A2 — Hosting SLA", steps: "Thor → Norns → Loki → Heimdall → Tyr", progress: 100, status: "complete" },
+  { streamId: "A3", label: "A3 — SLA Amendment 1", steps: "Thor → Norns → Loki → Heimdall → Tyr", progress: 100, status: "complete" },
+  { streamId: "B1", label: "B1 — Harbor Services", steps: "Thor → Norns → Loki → Heimdall → Tyr", progress: 100, status: "complete" },
+  { streamId: "B2", label: "B2 — Logistics Agreement", steps: "Thor → Norns → Loki → Heimdall → Tyr", progress: 100, status: "complete" },
+  { streamId: "C1", label: "C1 — Vantage SaaS", steps: "Thor → Norns → Loki → Heimdall → Tyr", progress: 100, status: "complete" },
+  { streamId: "X", label: "X — Cross-Contract Synthesis", steps: "Loki conflicts → Heimdall → Tyr → synthesis", progress: 100, status: "complete" },
 ];

@@ -1,0 +1,553 @@
+"use client";
+
+import React, { useState, useRef } from "react";
+import { CheckpointDate } from "@/lib/types";
+
+export type WorkflowStage =
+  | "upload"
+  | "ingesting"
+  | "ingested"
+  | "running_decision"
+  | "completed";
+
+interface OdinForceWorkflowProps {
+  currentStage: WorkflowStage;
+  onStageChange: (stage: WorkflowStage) => void;
+  onResetWorkflow: () => void;
+  onSelectCheckpoint?: (cp: CheckpointDate) => void;
+}
+
+const STREAMS = ["A1", "A2", "A3", "B1", "B2", "C1", "X"] as const;
+
+export default function OdinForceWorkflow({
+  currentStage,
+  onStageChange,
+  onResetWorkflow,
+  onSelectCheckpoint,
+}: OdinForceWorkflowProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [dataPath, setDataPath] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [budgetMode, setBudgetMode] = useState<"full" | "low">("full");
+  const [ingestProgress, setIngestProgress] = useState<number>(0);
+  const [decisionProgress, setDecisionProgress] = useState<number>(0);
+  const [streamProgress, setStreamProgress] = useState<Record<string, number>>({});
+  const [activeAgentMessage, setActiveAgentMessage] = useState<string>("");
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const SUPPORTED_EXTENSIONS = [".zip", ".json", ".jsonl", ".txt", ".pdf"];
+
+  const validateFile = (file: File): boolean => {
+    const ext = "." + file.name.split(".").pop()?.toLowerCase();
+    if (!SUPPORTED_EXTENSIONS.includes(ext)) {
+      setErrorMessage(
+        `Invalid file format '${ext}'. Please upload a ${SUPPORTED_EXTENSIONS.join(", ")} file.`
+      );
+      return false;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      setErrorMessage("File exceeds maximum allowed size of 50 MB.");
+      return false;
+    }
+    setErrorMessage(null);
+    return true;
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && validateFile(file)) {
+      setSelectedFile(file);
+      setDataPath(`local://${file.name}`);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && validateFile(file)) {
+      setSelectedFile(file);
+      setDataPath(`local://${file.name}`);
+    }
+  };
+
+  const handleLoadCanonicalPreset = () => {
+    setSelectedFile(null);
+    setDataPath("manifest://quillhub-portfolio-v2027.zip");
+    setErrorMessage(null);
+  };
+
+  const handleStartIngestion = () => {
+    if (!selectedFile && !dataPath.trim()) {
+      setErrorMessage("Please select a contract file or provide a valid data path.");
+      return;
+    }
+
+    setErrorMessage(null);
+    onStageChange("ingesting");
+    setIngestProgress(10);
+    setActiveAgentMessage("Odin Force: Parsing package manifest.json and contract descriptors...");
+
+    setTimeout(() => {
+      setIngestProgress(35);
+      setActiveAgentMessage("Thor Extractor: Indexing canonical clauses across A1, A2, A3, B1, B2, C1...");
+    }, 700);
+
+    setTimeout(() => {
+      setIngestProgress(65);
+      setActiveAgentMessage("Norns & Heimdall: Synchronizing clock.json (2027-03-15) & Drop 1 event stream...");
+      setStreamProgress({ A1: 100, A2: 100, A3: 100, B1: 80, B2: 60, C1: 60, X: 50 });
+    }, 1400);
+
+    setTimeout(() => {
+      setIngestProgress(100);
+      setStreamProgress({ A1: 100, A2: 100, A3: 100, B1: 100, B2: 100, C1: 100, X: 100 });
+      setActiveAgentMessage("Ingestion complete. 6 contracts discovered. 41 clauses indexed with substring grounding.");
+      onStageChange("ingested");
+      if (onSelectCheckpoint) onSelectCheckpoint("2027-03-15");
+    }, 2200);
+  };
+
+  const handleRunDecision = () => {
+    if (currentStage !== "ingested") return;
+
+    onStageChange("running_decision");
+    setDecisionProgress(15);
+    setActiveAgentMessage("Thor Extractor: Verifying exact quote substrings against canonical source texts...");
+
+    const low = budgetMode === "low";
+    const cap = (s: string) => (low && ["B2", "C1", "X"].includes(s) ? 50 : 100);
+
+    setTimeout(() => {
+      setDecisionProgress(40);
+      setActiveAgentMessage("Loki Adversary: Scanning counterparty liability traps & exclusivity clashes...");
+      setStreamProgress({
+        A1: 100,
+        A2: 100,
+        A3: 100,
+        B1: cap("B1"),
+        B2: Math.min(30, cap("B2")),
+        C1: Math.min(25, cap("C1")),
+        X: Math.min(20, cap("X")),
+      });
+    }, 900);
+
+    setTimeout(() => {
+      setDecisionProgress(75);
+      setActiveAgentMessage("Heimdall Radar: Quarantining malformed event payloads; auditing Drop 1...");
+      setStreamProgress({
+        A1: 100,
+        A2: 100,
+        A3: 100,
+        B1: 100,
+        B2: Math.min(65, cap("B2")),
+        C1: Math.min(60, cap("C1")),
+        X: Math.min(70, cap("X")),
+      });
+    }, 1800);
+
+    setTimeout(() => {
+      setDecisionProgress(100);
+      setStreamProgress({
+        A1: 100,
+        A2: 100,
+        A3: 100,
+        B1: 100,
+        B2: cap("B2"),
+        C1: cap("C1"),
+        X: cap("X"),
+      });
+      setActiveAgentMessage("Tyr Arbiter: Precedence adjudicated; all 14 traps resolved with 0 hallucinations.");
+      onStageChange("completed");
+    }, 2800);
+  };
+
+  const isIngestReady = Boolean(selectedFile || dataPath.trim());
+  const isDecisionReady = currentStage === "ingested";
+
+  return (
+    <div className="w-full bg-[#f3f8f5] border border-[#dce8e1] rounded-xl p-5 sm:p-7 select-none space-y-6">
+      {/* Workflow Navigation Header & State Stepper */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#dce8e1] pb-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full bg-white text-emerald-800 border border-[#dce8e1]">
+              ODIN FORCE PIPELINE
+            </span>
+            <span className="text-xs text-[#67776e] font-mono">
+              Autonomous Multi-Agent Workflow
+            </span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-serif font-normal text-[#14211a] mt-1 tracking-tight">
+            Data Ingestion & Adversarial Decision Engine
+          </h2>
+        </div>
+
+        {/* Global Pipeline State Chip & Reset */}
+        <div className="flex items-center gap-2">
+          <span
+            className={`text-xs font-mono font-semibold px-3 py-1 rounded-full border ${
+              currentStage === "completed"
+                ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                : currentStage === "running_decision" || currentStage === "ingesting"
+                ? "bg-sky-50 text-sky-800 border-sky-300 animate-pulse"
+                : currentStage === "ingested"
+                ? "bg-amber-50 text-amber-800 border-amber-300"
+                : "bg-white text-[#67776e] border-[#dce8e1]"
+            }`}
+          >
+            ● Status: {currentStage.replace("_", " ").toUpperCase()}
+          </span>
+
+          {currentStage !== "upload" && (
+            <button
+              type="button"
+              onClick={onResetWorkflow}
+              className="text-xs font-mono text-[#67776e] hover:text-[#14211a] px-2.5 py-1 rounded border border-[#dce8e1] bg-white hover:bg-neutral-50 transition-colors cursor-pointer"
+            >
+              Reset
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Step Indicator Badges (Step 1 -> Step 2 -> Step 3 -> Step 4) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* Step 1 Chip */}
+        <div
+          className={`p-3 rounded-lg border text-xs font-mono transition-all ${
+            currentStage === "upload"
+              ? "bg-white border-[#14211a] text-[#14211a] shadow-xs"
+              : "bg-white/60 border-[#dce8e1] text-[#67776e]"
+          }`}
+        >
+          <div className="text-[10px] uppercase tracking-wider text-[#67776e]">
+            Step 1
+          </div>
+          <div className="font-semibold mt-0.5">Upload File / Path</div>
+          <div className="text-[10px] text-emerald-700 mt-1">
+            {selectedFile || dataPath ? "✓ Source Selected" : "Waiting for Input"}
+          </div>
+        </div>
+
+        {/* Step 2 Chip */}
+        <div
+          className={`p-3 rounded-lg border text-xs font-mono transition-all ${
+            currentStage === "ingesting"
+              ? "bg-white border-[#14211a] text-[#14211a] shadow-xs ring-2 ring-emerald-500/20"
+              : currentStage === "ingested" || currentStage === "running_decision" || currentStage === "completed"
+              ? "bg-emerald-50/50 border-emerald-200 text-emerald-900"
+              : "bg-white/60 border-[#dce8e1] text-[#67776e]"
+          }`}
+        >
+          <div className="text-[10px] uppercase tracking-wider text-[#67776e]">
+            Step 2
+          </div>
+          <div className="font-semibold mt-0.5">Ingest Data</div>
+          <div className="text-[10px] mt-1">
+            {currentStage === "ingesting"
+              ? `${ingestProgress}% Processing...`
+              : currentStage === "ingested" || currentStage === "running_decision" || currentStage === "completed"
+              ? "✓ Ingestion Complete"
+              : "Pending Step 1"}
+          </div>
+        </div>
+
+        {/* Step 3 Chip */}
+        <div
+          className={`p-3 rounded-lg border text-xs font-mono transition-all ${
+            currentStage === "running_decision"
+              ? "bg-white border-[#14211a] text-[#14211a] shadow-xs ring-2 ring-sky-500/20"
+              : currentStage === "completed"
+              ? "bg-emerald-50/50 border-emerald-200 text-emerald-900"
+              : "bg-white/60 border-[#dce8e1] text-[#67776e]"
+          }`}
+        >
+          <div className="text-[10px] uppercase tracking-wider text-[#67776e]">
+            Step 3
+          </div>
+          <div className="font-semibold mt-0.5">Run Decision</div>
+          <div className="text-[10px] mt-1">
+            {currentStage === "running_decision"
+              ? `${decisionProgress}% Multi-Agent Loop...`
+              : currentStage === "completed"
+              ? "✓ Rulings Adjudicated"
+              : currentStage === "ingested"
+              ? "Ready to Execute"
+              : "Pending Step 2"}
+          </div>
+        </div>
+
+        {/* Step 4 Chip */}
+        <div
+          className={`p-3 rounded-lg border text-xs font-mono transition-all ${
+            currentStage === "completed"
+              ? "bg-emerald-100/60 border-emerald-300 text-emerald-950 font-bold"
+              : "bg-white/60 border-[#dce8e1] text-[#67776e]"
+          }`}
+        >
+          <div className="text-[10px] uppercase tracking-wider text-[#67776e]">
+            Step 4
+          </div>
+          <div className="font-semibold mt-0.5">Results & Analysis</div>
+          <div className="text-[10px] mt-1">
+            {currentStage === "completed"
+              ? "★ 14 Traps Neutralized"
+              : "Locked Until Step 3"}
+          </div>
+        </div>
+      </div>
+
+      {/* ERROR MESSAGE DISPLAY */}
+      {errorMessage && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs font-mono text-red-800 flex items-center justify-between">
+          <span>⚠️ {errorMessage}</span>
+          <button
+            type="button"
+            onClick={() => setErrorMessage(null)}
+            className="text-red-600 hover:text-red-900 text-sm font-bold"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {/* WORKFLOW INTERACTION PANEL: Steps 1, 2, 3 */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column (Step 1: Upload File & Data Path) */}
+        <div className="lg:col-span-6 bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between border-b border-[#dce8e1] pb-2.5">
+            <h3 className="font-serif font-normal text-base sm:text-lg text-[#14211a]">
+              Step 1 — Upload File / Data Path
+            </h3>
+            <span className="text-[10px] font-mono uppercase text-[#67776e]">
+              .zip, .json, .txt, .pdf
+            </span>
+          </div>
+
+          {/* Drag & Drop File Zone */}
+          <div
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragOver(true);
+            }}
+            onDragLeave={() => setIsDragOver(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={`border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-all ${
+              isDragOver
+                ? "border-emerald-600 bg-emerald-50/50"
+                : selectedFile
+                ? "border-emerald-500 bg-emerald-50/20"
+                : "border-[#dce8e1] hover:border-[#14211a] hover:bg-[#f8faf9]"
+            }`}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".zip,.json,.jsonl,.txt,.pdf"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+
+            {selectedFile ? (
+              <div className="space-y-1">
+                <div className="text-sm font-mono font-semibold text-emerald-800 flex items-center justify-center gap-2">
+                  <span>📄 {selectedFile.name}</span>
+                </div>
+                <p className="text-[11px] font-mono text-[#67776e]">
+                  {(selectedFile.size / 1024).toFixed(1)} KB • Ready for Ingestion
+                </p>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedFile(null);
+                    setDataPath("");
+                  }}
+                  className="mt-1 text-[11px] font-mono text-red-600 hover:underline"
+                >
+                  Remove file
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-1 text-[#67776e]">
+                <div className="text-xs font-mono font-semibold text-[#14211a]">
+                  Click to select contract bundle or drag & drop here
+                </div>
+                <p className="text-[11px] font-sans">
+                  Supports .zip packages with manifest.json, canonical clauses, and event logs
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Data Path Input */}
+          <div className="space-y-1.5">
+            <label className="text-[11px] font-mono text-[#67776e] block uppercase tracking-wider">
+              Or specify repository / bundle data path:
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={dataPath}
+                onChange={(e) => {
+                  setDataPath(e.target.value);
+                  setSelectedFile(null);
+                }}
+                placeholder="e.g. data/quillhub_portfolio/ or manifest.json"
+                className="flex-1 text-xs font-mono px-3 py-2 border border-[#dce8e1] rounded-lg bg-white focus:outline-none focus:border-[#14211a]"
+              />
+              <button
+                type="button"
+                onClick={handleLoadCanonicalPreset}
+                className="px-3 py-2 rounded-lg bg-[#f3f8f5] hover:bg-[#e8f2ec] border border-[#dce8e1] text-[11px] font-mono font-medium text-[#14211a] whitespace-nowrap cursor-pointer transition-colors"
+                title="Load standard 6-contract canonical benchmark bundle"
+              >
+                Use Benchmark Bundle
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column (Step 2: Ingest Data & Step 3: Run Decision) */}
+        <div className="lg:col-span-6 bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs space-y-5">
+          <div className="flex items-center justify-between border-b border-[#dce8e1] pb-2.5">
+            <h3 className="font-serif font-normal text-base sm:text-lg text-[#14211a]">
+              Steps 2 & 3 — Execution Control
+            </h3>
+            <span className="text-[10px] font-mono uppercase text-[#67776e]">
+              Adversarial Ingestion & Decision
+            </span>
+          </div>
+
+          {/* Action Row: Ingest Data + Run Decision Buttons */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Step 2: Ingest Data Button */}
+            <button
+              type="button"
+              disabled={!isIngestReady || currentStage === "ingesting"}
+              onClick={handleStartIngestion}
+              className={`flex-1 px-4 py-2.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                currentStage === "ingesting"
+                  ? "bg-emerald-700 text-white animate-pulse"
+                  : currentStage === "ingested" || currentStage === "completed"
+                  ? "bg-white text-emerald-800 border border-emerald-300 hover:bg-emerald-50"
+                  : isIngestReady
+                  ? "bg-[#14211a] text-white hover:bg-[#14211a]/90 shadow-xs"
+                  : "bg-neutral-100 text-neutral-400 border border-neutral-200 cursor-not-allowed"
+              }`}
+            >
+              <span>{currentStage === "ingesting" ? "Ingesting..." : "Step 2: Ingest Data"}</span>
+              <span>📥</span>
+            </button>
+
+            {/* Step 3: Run Decision Button */}
+            <button
+              type="button"
+              disabled={currentStage !== "ingested"}
+              onClick={handleRunDecision}
+              className={`flex-1 px-4 py-2.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                currentStage === "running_decision"
+                  ? "bg-emerald-700 text-white animate-pulse"
+                  : isDecisionReady
+                  ? "bg-emerald-700 text-white hover:bg-emerald-800 shadow-xs"
+                  : "bg-neutral-100 text-neutral-400 border border-neutral-200 cursor-not-allowed"
+              }`}
+            >
+              <span>
+                {currentStage === "running_decision" ? "Adjudicating..." : "Step 3: Run Decision"}
+              </span>
+              <span>⚡</span>
+            </button>
+          </div>
+
+          {/* Budget Selector Option (from Odin Contract War Room) */}
+          <div className="flex items-center justify-between p-2.5 bg-[#f8faf9] border border-[#dce8e1] rounded-lg text-xs font-mono">
+            <span className="text-[#67776e]">Execution Budget:</span>
+            <select
+              value={budgetMode}
+              onChange={(e) => setBudgetMode(e.target.value as "full" | "low")}
+              className="bg-white border border-[#dce8e1] rounded px-2.5 py-1 text-xs text-[#14211a] font-mono cursor-pointer"
+            >
+              <option value="full">Full budget (Exhaustive search)</option>
+              <option value="low">Low budget (Demo cap — 50% limit on B2, C1, X)</option>
+            </select>
+          </div>
+
+          {/* Active Workstream Progress Bar & Status Chips */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-mono text-[#67776e]">
+              <span>Active Workstreams (A1–C1, X):</span>
+              <span>
+                {currentStage === "ingesting"
+                  ? `Ingest ${ingestProgress}%`
+                  : currentStage === "running_decision"
+                  ? `Decision ${decisionProgress}%`
+                  : currentStage === "completed"
+                  ? "100% Complete"
+                  : "Idle"}
+              </span>
+            </div>
+
+            {/* Overall Progress Bar */}
+            <div className="w-full h-2 bg-[#dce8e1] rounded-full overflow-hidden">
+              <div
+                className={`h-full transition-all duration-300 rounded-full ${
+                  currentStage === "completed"
+                    ? "bg-emerald-600"
+                    : currentStage === "running_decision"
+                    ? "bg-sky-600"
+                    : "bg-[#14211a]"
+                }`}
+                style={{
+                  width: `${
+                    currentStage === "ingesting"
+                      ? ingestProgress
+                      : currentStage === "running_decision"
+                      ? decisionProgress
+                      : currentStage === "completed"
+                      ? 100
+                      : 0
+                  }%`,
+                }}
+              />
+            </div>
+
+            {/* Per-Stream Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              {STREAMS.map((s) => {
+                const prog = streamProgress[s] ?? 0;
+                return (
+                  <span
+                    key={s}
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border transition-all ${
+                      prog >= 100
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                        : prog > 0
+                        ? "bg-sky-50 text-sky-800 border-sky-200"
+                        : "bg-white text-[#67776e] border-[#dce8e1]"
+                    }`}
+                  >
+                    <b>{s === "X" ? "Cross-X" : s}</b>
+                    <span>{prog}%</span>
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Live Agent Telemetry Ticker */}
+          {activeAgentMessage && (
+            <div className="p-2.5 bg-[#14211a] text-white rounded-lg text-xs font-mono flex items-center gap-2 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+              <span className="truncate">{activeAgentMessage}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

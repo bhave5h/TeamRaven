@@ -96,3 +96,46 @@ export interface FinancialMetric {
   contractsAtRisk: number;
   slaViolationCount: number;
 }
+
+export interface ExtractionItem {
+  contract: string;
+  field: string;
+  value: string;
+  confidence: number;
+  citationKey: string;
+  flag?: string;
+}
+
+export interface RulingItem {
+  claim: string;
+  lokiAttack: string;
+  heimdallEvidence: string;
+  verdict: "TRUE" | "FALSE" | "VALID" | "DISMISSED";
+  rationale: string;
+}
+
+export interface QuarantinedItem {
+  source: string;
+  payload: string;
+  reason: string;
+}
+
+export interface ArithmeticOverride {
+  item: string;
+  llmValue: string;
+  pythonValue: string;
+}
+
+export interface AgentTransition {
+  from: string;
+  to: string;
+  action: string;
+}
+
+export interface WorkstreamPlan {
+  streamId: string;
+  label: string;
+  steps: string;
+  progress: number;
+  status: "queued" | "running" | "complete" | "budget-capped";
+}

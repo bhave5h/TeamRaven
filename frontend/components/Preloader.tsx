@@ -14,7 +14,7 @@ export default function Preloader({
   onFinish,
 }: PreloaderProps) {
   const [phase, setPhase] = useState<"loading" | "fading" | "done">("loading");
-  const [statusText, setStatusText] = useState("Initializing Odin War Room...");
+  const [statusText, setStatusText] = useState("Initializing Odin Force...");
 
   useEffect(() => {
     // Stage 1: Quick status progression

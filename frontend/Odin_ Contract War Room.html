@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Odin: Contract War Room</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f3f1ec;--pn:#fff;--ln:#d9d4c8;--tx:#1d2330;--mu:#6a7080;--gold:#9a7424;--red:#c0392b;--amb:#b97a0c;--blu:#2f6fb0;--grn:#2e8b57;--vi:#7a4fb0;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161d;--pn:#1b212b;--ln:#2d3543;--tx:#e8e4d8;--mu:#8e96a6;--gold:#d3ad5e;--red:#ee6b5c;--amb:#e8ac3c;--blu:#6aaee8;--grn:#62bb86;--vi:#a98ae0;color-scheme:dark}}
+*{box-sizing:border-box}html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0;font-weight:600}
+h2{font-size:16px;margin-bottom:8px}
+button,select,input{font:inherit;color:inherit;background:var(--pn);border:1px solid var(--ln);border-radius:4px;padding:5px 9px}
+button{cursor:pointer}button:hover{border-color:var(--gold)}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--blu);outline-offset:1px}
+button.pri{background:var(--gold);color:#fff;border-color:var(--gold);font-weight:600}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--pn);border-bottom:2px solid var(--gold);padding:8px 14px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+header h1{font-size:18px;margin-right:6px}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-block;padding:1px 8px;border-radius:10px;border:1px solid var(--ln);font-size:12px;white-space:nowrap}
+.st-idle{color:var(--mu)}.st-running{color:var(--blu);border-color:var(--blu)}.st-partial{color:var(--amb);border-color:var(--amb)}.st-done{color:var(--grn);border-color:var(--grn)}
+nav{display:flex;gap:2px;padding:0 14px;border-bottom:1px solid var(--ln);background:var(--pn);overflow-x:auto}
+nav button{border:0;border-bottom:3px solid transparent;border-radius:0;padding:9px 12px;background:none;white-space:nowrap}
+nav button.on{border-bottom-color:var(--gold);font-weight:600}
+main{padding:14px;max-width:1400px;margin:auto}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(12,1fr)}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:6px;padding:12px;min-width:0}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c7{grid-column:span 7}.c6{grid-column:span 6}.c5{grid-column:span 5}.c4{grid-column:span 4}
+@media(max-width:900px){.c8,.c7,.c6,.c5,.c4{grid-column:span 12}}
+.slider{padding:10px 16px}.slider input{width:100%;accent-color:var(--gold);padding:0}
+.ticks{display:flex;justify-content:space-between;color:var(--mu);font-size:12px}
+.big{font:600 44px/1 Georgia,serif}
+.neg{color:var(--red)}.pos{color:var(--grn)}.mu{color:var(--mu)}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--ln);vertical-align:top}
+.scroll{overflow-x:auto}
+.cite{cursor:pointer;color:var(--blu);border:1px solid var(--blu);border-radius:3px;padding:0 5px;font-size:12px;background:none}
+.alert{border-left:4px solid var(--ln);padding:6px 10px;margin-bottom:8px;background:var(--bg);border-radius:0 4px 4px 0}
+.alert.critical{border-color:var(--red)}.alert.warning{border-color:var(--amb)}.alert.info{border-color:var(--blu)}
+.turn{padding:7px 10px;margin-bottom:7px;border-radius:4px;border-left:4px solid}
+.turn.Loki{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,transparent)}
+.turn.Heimdall{border-color:var(--blu);background:color-mix(in srgb,var(--blu) 8%,transparent)}
+.turn.Tyr{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.hm{display:grid;grid-template-columns:84px repeat(7,1fr);gap:3px;font-size:12px}
+.hm div{padding:5px 0;text-align:center;border-radius:3px}
+.s0{background:var(--bg)}.s1{background:color-mix(in srgb,var(--blu) 30%,transparent)}.s2{background:color-mix(in srgb,var(--amb) 45%,transparent)}.s3{background:color-mix(in srgb,var(--red) 60%,transparent)}.sf{opacity:.25}
+#drawer{position:fixed;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--pn);border-left:2px solid var(--gold);padding:16px;transform:translateX(105%);transition:transform .2s;z-index:10;overflow:auto}
+#drawer.open{transform:none}
+mark{background:color-mix(in srgb,var(--gold) 40%,transparent);color:inherit;padding:0 2px}
+.stamp{display:inline-block;border:2px solid;padding:1px 8px;font-weight:700;transform:rotate(-3deg);border-radius:3px}
+.ok{color:var(--grn)}.bad{color:var(--red)}
+.warnbox{background:color-mix(in srgb,var(--red) 12%,transparent);border:1px solid var(--red);padding:4px 8px;border-radius:4px;margin:6px 0}
+.draft{border:1px solid var(--ln);border-radius:6px;padding:10px;margin-bottom:10px}
+.draft pre{white-space:pre-wrap;background:var(--bg);padding:8px;border-radius:4px;font:12px/1.4 ui-monospace,monospace;margin:6px 0}
+.bar{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;min-width:60px}.bar i{display:block;height:100%;background:var(--blu);transition:width .3s}
+.hide{display:none}
+</style></head><body>
+<header>
+ <h1>Odin · Contract War Room</h1>
+ <div class="grp"><input id="bpath" placeholder="Data folder path" size="22" aria-label="Data folder path"><span class="mu">or</span>
+  <input id="zipf" type="file" accept=".zip" aria-label="Upload zip file" style="max-width:190px"><button class="pri" onclick="ingest()">Ingest</button></div>
+ <div class="grp"><button class="pri" onclick="run()">Run analysis</button><select id="bud" aria-label="Budget"><option value="full">Full budget</option><option value="low">Low budget (demo cap)</option></select><span id="streams" class="grp"></span></div>
+ <div class="grp"><b id="cdate">Mar 15</b><select id="drop" aria-label="Drop"><option>Drop 1</option><option>Drop 2</option></select><span id="status" class="chip st-idle">idle</span></div>
+</header>
+<nav id="tabs"></nav>
+<main>
+<section id="p-war" class="grid">
+ <div class="card c12 slider"><h2>Time slider</h2><input id="sl" type="range" min="0" max="2" step="1" value="0" aria-label="Checkpoint"><div class="ticks"><span>Mar 15</span><span>Jun 1</span><span>Sep 15</span></div></div>
+ <div class="card c12"><h2>Work plan</h2><div class="scroll"><table id="plan"></table></div></div>
+ <div class="card c5"><h2>Exposure</h2><div class="mu">Total exposure at <span class="dt"></span></div><div class="big" id="tot"></div><svg id="gauge" viewBox="0 0 200 124" width="100%" style="max-width:240px;display:block;margin-top:8px" role="img" aria-label="Exposure gauge"></svg>
+  <div id="wf" style="margin-top:12px"></div><p class="mu" style="font-size:12px">Totals come from Python, not LLM arithmetic.</p></div>
+ <div class="card c7"><h2>Contract graph</h2><svg id="graph" viewBox="0 0 600 320" width="100%" role="img" aria-label="Contract graph"></svg>
+  <div class="mu" style="font-size:12px">Rectangles are contracts, ovals are parties, pills are clauses. Click any node or edge for its citation. Dashed blue = amends, grey = incorporates, red = conflict.</div></div>
+ <div class="card c5"><div class="grp" style="justify-content:space-between"><h2>Risk heatmap</h2><select id="hmv" onchange="render()" aria-label="Heatmap rows"><option value="contract">By contract</option><option value="type">By clause type</option></select></div><div id="hm" class="hm"></div></div>
+ <div class="card c7"><h2>Alerts</h2><div class="grp" style="margin-bottom:8px"><select id="fc"><option value="">All contracts</option></select><select id="fs"><option value="">All severities</option><option>critical</option><option>warning</option><option>info</option></select></div><div id="alerts"></div></div>
+ <div class="card c6"><div class="grp" style="justify-content:space-between"><h2>Agent debate</h2><button onclick="replay()">Replay</button></div><div id="debate"></div></div>
+ <div class="card c6"><h2>Action panel</h2><div id="actions"></div></div>
+</section>
+
+<section id="p-ext" class="hide card"><h2>Extraction (Thor)</h2><div class="scroll"><table id="ext"></table></div></section>
+<section id="p-rul" class="hide card"><h2>Rulings log</h2><div class="scroll"><table id="rul"></table></div></section>
+<section id="p-grd" class="hide grid">
+ <div class="card c6"><h2>Guardrails</h2><div id="grd"></div></div>
+ <div class="card c6"><h2>Trap scoreboard</h2><div id="traps"></div></div>
+ <div class="card c12"><h2>Agent transitions</h2><div id="trans" class="mu"></div></div>
+</section>
+<section id="p-rep" class="hide grid">
+ <div class="card c12"><div class="grp" style="justify-content:space-between"><h2>Company risk report</h2><button onclick="toast('Report downloaded')">Download</button></div>
+  <p>Net leakage at the selected date: <b id="rtot"></b>. Work plan: 5 contract streams plus 1 cross-contract stream.</p>
+  <h3>Cross-contract conflicts</h3><div class="scroll"><table id="conf"></table></div></div>
+ <div class="card c12"><h2>Timeline and worst case if no action</h2><div class="scroll"><table id="wc"></table></div></div>
+ <div class="card c12"><h2>References (clause text)</h2><div id="refs"></div></div>
+ <div class="card c6"><h2>Prioritized actions</h2><ol id="prio"></ol></div>
+ <div class="card c6"><h2>Per-contract dossiers</h2><div id="dos"></div></div>
+</section>
+</main>
+<aside id="drawer" aria-label="Citation drawer"><button onclick="drawer.classList.remove('open')" style="float:right">Close</button><div id="dbody"></div></aside>
+<div id="toast" class="chip" style="position:fixed;left:14px;bottom:14px;background:var(--pn);display:none"></div>
+<script>
+const $=id=>document.getElementById(id);
+const DATES=["Mar 15","Jun 1","Sep 15"];
+const C=["A1","A2","A3","B1","B2","C1"];
+const OWED=[0,6000,14000],REC=[0,2400,5200];
+const fmt=n=>"$"+Math.abs(n).toLocaleString();
+const CL={
+ c1:{doc:"A2",sec:"§7.2 Exclusivity",q:"Supplier shall not provide the Services to any competitor of Customer",txt:"7.2 During the Term, Supplier shall not provide the Services to any competitor of Customer within the Territory.",ok:1,tag:"sourced",conf:.94},
+ c2:{doc:"A3",sec:"§1 Amendment",q:"hereby amends Section 4 of the Master Agreement",txt:"1. This Amendment No. 1 hereby amends Section 4 of the Master Agreement and supersedes conflicting terms.",ok:1,tag:"sourced",conf:.97},
+ c3:{doc:"B1",sec:"§9.3 Insurance",q:"maintain cyber insurance of not less than $2,000,000",txt:"9.3 Supplier shall maintain cyber insurance of not less than $2,000,000 and notify Customer within 5 business days of any lapse.",ok:1,tag:"sourced",conf:.91},
+ c4:{doc:"B2",sec:"§4 Acceptance",q:"deemed accepted if no rejection within 10 days",txt:"4. Deliverables are deemed accepted if no rejection within 10 days of delivery.",ok:1,tag:"sourced",conf:.88},
+ c5:{doc:"C1",sec:"§12 Termination",q:"may terminate for convenience on 90 days notice",txt:"12. Either party may terminate for convenience on 60 days notice.",ok:0,tag:"inferred",conf:.42}
+};
+const NODES=[["A1","Master (A1)",70,60,"c","c1","A1"],["A2","Hosting (A2)",230,60,"c","c1","A2"],["B1","Harbor (B1)",400,60,"c","c3","B1"],["A3","Amend. (A3)",230,170,"c","c2","A3"],["B2","Logistics (B2)",400,170,"c","c4","B2"],["C1","Vantage (C1)",520,110,"c","c5","C1"],
+["Q","Quillhub",70,170,"p","c1","A1"],["S","StratoNode",110,260,"p","c1","A2"],["H","Harbor Co",315,115,"p","c3","B1"],["V","Vantage Inc",520,250,"p","c5","C1"],
+["k72","§7.2 Exclusivity",315,16,"k","c1","A2"],["k93","§9.3 Insurance",430,16,"k","c3","B1"],["k4","§4 Acceptance",400,235,"k","c4","B2"],["k12","§12 Termination",545,50,"k","c5","C1"]];
+const EDGES=[["A1","A2","incorporates","c2"],["A3","A2","amends","c2"],["A2","B1","conflict","c1"],["B1","B2","incorporates","c3"],["B2","C1","incorporates","c4"],["Q","A1","party","c1"],["S","A2","party","c1"],["H","B1","party","c3"],["V","C1","party","c5"],["k72","A2","clause","c1"],["k93","B1","clause","c3"],["k4","B2","clause","c4"],["k12","C1","clause","c5"]];
+const HMT={Payment:[0,0,1,1,2,1,1],Insurance:[0,0,2,3,3,2,1],Acceptance:[0,0,0,0,1,2,3],Exclusivity:[0,0,1,2,2,1,1],Termination:[1,1,1,0,1,1,2]};
+const TL=[{dt:"Mar 1",ev:"Q1 hosting fee",i:0,done:1,cl:"c1"},{dt:"Jun 6",ev:"Insurance lapse notice window closes",i:1,done:0,$:6000,cl:"c3"},{dt:"Jun 15",ev:"StratoNode credit claim due",i:1,done:0,$:2400,cl:"c1"},{dt:"Sep 25",ev:"M4 deemed-acceptance deadline",i:2,done:0,$:8000,cl:"c4"},{dt:"Sep 30",ev:"C1 notice window (effective date blank)",i:2,done:0,$:null,cl:"c5"}];
+const DOS={A1:{t:"Master agreement",k:"Quillhub and hosting group; incorporates A2",o:"Quillhub pays quarterly fees",l:"Quarterly invoices, annual renewal",r:"No liability cap stated",a:"Confirm renewal date with finance",c:"c2",f:.9},A2:{t:"Hosting services",k:"Hosting with exclusivity in §7.2",o:"Supplier may not serve competitors",l:"Term runs to Dec 2027",r:"Exclusivity blocks the StratoNode deal",a:"File StratoNode credit claim by Jun 15",c:"c1",f:.94},A3:{t:"Amendment No. 1",k:"Amends A2 §4 only",o:"None of its own",l:"Effective on signing",r:"Does not remove exclusivity",a:"Cite A3 §1 in the Tyr ruling",c:"c2",f:.97},B1:{t:"Harbor services",k:"$2M cyber insurance required",o:"Notify within 5 business days of a lapse",l:"Lapse began May 28, notice due Jun 6",r:"Harbor credit claim",a:"Send lapse notice to the contract Notice Address",c:"c3",f:.91},B2:{t:"Logistics contract",k:"Exhibits A to C referenced but missing",o:"Reject deliverables within 10 days",l:"M4 deadline Sep 25",r:"Deemed acceptance; missing exhibits",a:"Send M4 Rejection Notice before Sep 25",c:"c4",f:.88},C1:{t:"Vantage services",k:"Effective date is blank",o:"Termination on notice",l:"Notice window cannot be computed",r:"Unclear start date and notice period",a:"Ask Vantage to confirm the date in writing",c:"c5",f:.42}};
+const QUAR=[["Drop 2, line 8",'{"event":"late_paym',"Unparseable JSON, set aside"]];
+const OVR=[["B1 penalty","LLM wrote $5,800","Python: $6,000"],["A2 upstream credit","LLM wrote $2,300","Python: $2,400"],["Net leakage","LLM wrote $3,500","Python: $3,600"]];
+const TRANS=[["Odin","Thor","Extract all six contracts"],["Thor","Norns","Pass dates and amounts"],["Norns","Loki","Pass timeline"],["Loki","Thor","Clarify C1 effective date"],["Thor","Loki","Re-extracted clause, low confidence"],["Loki","Heimdall","Attacks sent for verification"],["Heimdall","Tyr","Disputed claim: exclusivity"],["Tyr","Odin","Rulings recorded"],["Odin","Synthesis","All streams reported"]];
+const ALERTS=[
+ {d:0,c:"B1",s:"info",t:"Insurance renewal due in 60 days",cl:"c3",dl:"May 14",$:0},
+ {d:1,c:"B1",s:"critical",t:"Insurance lapse: 5-day notice countdown",cl:"c3",dl:"Jun 6",$:6000},
+ {d:1,c:"A2",s:"warning",t:"Upstream StratoNode credit claim due",cl:"c1",dl:"Jun 15",$:2400},
+ {d:2,c:"B2",s:"critical",t:"M4 deemed-acceptance deadline",cl:"c4",dl:"Sep 25",$:8000},
+ {d:2,c:"C1",s:"warning",t:"Effective date blank: notice period unclear",cl:"c5",dl:"Sep 30",$:0}
+];
+const HM={A1:[0,0,0,0,0,0,1],A2:[0,0,1,2,2,1,1],A3:[0,0,0,0,1,0,0],B1:[0,0,2,3,3,2,1],B2:[0,0,0,0,1,2,3],C1:[1,1,1,0,1,1,2]};
+const TURNS=[
+ [1,"Loki","Harbor can claim breach: the insurance lapse exceeded 5 business days.","c3"],
+ [1,"Heimdall","Event log shows lapse began May 28. Notice window closes Jun 6.","c3"],
+ [2,"Loki","Exclusivity in A2 bars the StratoNode deal; A3 does not remove it.","c1"],
+ [2,"Heimdall","A3 amends §4 only. §7.2 is unchanged, so the clash stands.","c2"],
+ [3,"Tyr","Ruling: claim TRUE for insurance; exclusivity conflict VALID. Human sign-off required.","c1"]
+];
+const ACTS=[
+ {n:"Harbor credit response",to:"legal@harborlogistics.com",addr:"legal@harborlogistics.com",cf:.92,cl:"c3"},
+ {n:"StratoNode credit claim",to:"claims@stratonode.io",addr:"claims@stratonode.io",cf:.85,cl:"c1"},
+ {n:"M4 Rejection Notice",to:"ops@b2freight.com",addr:"ops@b2freight.com",cf:.9,cl:"c4"},
+ {n:"Insurance lapse notice",to:"j.lee@vantage-mail.com",addr:"Notices, 12 Pine St, Austin TX",cf:.7,cl:"c3"}
+];
+const EXT=[["A2","Exclusivity","Supplier may not serve competitors",.94,"c1",""],["A3","Amendment scope","Amends §4 only",.97,"c2",""],["B1","Cyber insurance","$2M minimum, 5-day lapse notice",.91,"c3",""],["B2","Exhibits","Exhibits A–C referenced but missing",.4,"c4","Ambiguous: missing exhibits"],["C1","Effective date","(blank)",.3,"c5","Ambiguous: blank effective date"]];
+const RUL=[["Insurance lapse is a breach","Attack: breached","Lapse began May 28","TRUE","Clause §9.3 plus event log"],["A3 removes exclusivity","Attack: removed","A3 touches §4 only","FALSE","Quote check passed"],["Exclusivity blocks StratoNode","Attack: blocks","Territory matches","VALID","§7.2 applies to this deal"]];
+const TRAPS=[["Exclusivity clash A2 vs B1",1,"c1"],["Amendment A3→A2",1,"c2"],["Insurance lapse",1,"c3"],["M4 deemed acceptance",1,"c4"],["Missing exhibits (B2)",1,"c4"],["Blank effective date (C1)",1,"c5"],["Vantage informal email address",1,"c3"],["Malformed event, drop 2 line 8",0,"c1"]];
+let d=0,ack={},stat={},fin="";
+const tabs=[["war","War Room"],["ext","Extraction"],["rul","Rulings"],["grd","Guardrails & traps"],["rep","Reports"]];
+$("tabs").innerHTML=tabs.map(t=>`<button data-t="${t[0]}" onclick="tab('${t[0]}')">${t[1]}</button>`).join("");
+function tab(k){tabs.forEach(t=>{$("p-"+t[0]).classList.toggle("hide",t[0]!=k)});document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==k))}
+function toast(m){const e=$("toast");e.textContent=m;e.style.display="block";setTimeout(()=>e.style.display="none",1800)}
+const cite=k=>`<button class="cite" onclick="openCite('${k}')">${CL[k].doc} ${CL[k].sec.split(" ")[0]}</button>`;
+function openCite(k){const c=CL[k];const t=c.txt.replace(c.q,"<mark>"+c.q+"</mark>");
+ $("dbody").innerHTML=`<h3>${c.doc} · ${c.sec}</h3><p>${c.ok?t:c.txt}</p>
+ <p><span class="stamp ${c.ok?"ok":"bad"}">${c.ok?"VERIFIED":"REJECTED"}</span> <span class="mu">substring check</span></p>
+ <p>Claim quote: <i>"${c.q}"</i></p><p><span class="chip">${c.tag}</span> <span class="chip">confidence ${Math.round(c.conf*100)}%</span></p>
+ ${c.ok?"":'<p class="bad">Quote not found in the clause text. Claim rejected.</p>'}`;drawer.classList.add("open")}
+const drawer=$("drawer");
+function renderStreams(){$("streams").innerHTML=[...C,"X"].map(s=>{const p=stat[s]||0;return `<span class="chip" title="${s==="X"?"Cross-contract":s}">${s} <span class="bar" style="display:inline-block;width:34px;vertical-align:middle"><i style="width:${p}%"></i></span></span>`}).join("")}
+function setStatus(s){const e=$("status");e.textContent=s;e.className="chip st-"+(s=="idle"?"idle":s=="running"?"running":s=="complete"?"done":"partial")}
+function ingest(){const z=$("zipf").files[0],p=$("bpath").value.trim();if(!z&&!p){toast("Enter a data path or choose a .zip file");return}toast("Ingesting "+(z?z.name:p)+". Clock is read from the bundle.");setStatus("idle");stat={};fin="";renderStreams();renderPlan()}
+function renderPlan(){$("plan").innerHTML="<tr><th>Workstream</th><th>Steps</th><th>Status</th></tr>"+[...C,"X"].map(s=>{const p=Math.round(stat[s]||0),st=stat[s]==null?"queued":p>=100?"complete":fin?"budget-capped":"running";return `<tr><td><b>${s=="X"?"Cross-contract":s}</b></td><td class="mu">${s=="X"?"Loki conflicts → Heimdall → Tyr → synthesis":"Thor → Norns → Loki → Heimdall → Tyr"}</td><td><span class="chip st-${st=="complete"?"done":st=="running"?"running":st=="queued"?"idle":"partial"}">${st} ${p}%</span></td></tr>`}).join("")}
+function run(){stat={};fin="";setStatus("running");const low=$("bud").value=="low",cap=s=>low&&["B2","C1","X"].includes(s)?50:100;let t=setInterval(()=>{[...C,"X"].forEach(s=>stat[s]=Math.min(cap(s),(stat[s]||0)+Math.random()*30));renderStreams();renderPlan();
+ if([...C,"X"].every(s=>stat[s]>=cap(s))){clearInterval(t);fin=[...C,"X"].every(s=>stat[s]>=100)?"":"budget-capped";renderPlan();setStatus(fin||"complete")}},400)}
+function render(){
+ $("cdate").textContent=DATES[d];document.querySelectorAll(".dt").forEach(e=>e.textContent=DATES[d]);
+ const net=OWED[d]-REC[d];$("tot").textContent=fmt(net);$("tot").className="big "+(net?"neg":"");$("rtot").textContent=fmt(net);const gp=Math.min(100,net/150);$("gauge").innerHTML=`<path d="M20 100 A80 80 0 0 1 180 100" pathLength="100" fill="none" stroke="var(--ln)" stroke-width="16"/><path d="M20 100 A80 80 0 0 1 180 100" pathLength="100" fill="none" stroke="${gp>66?"var(--red)":gp>33?"var(--amb)":"var(--grn)"}" stroke-width="16" stroke-dasharray="${gp} 100"/><text x="20" y="118" font-size="10" fill="var(--mu)" text-anchor="middle">$0</text><text x="180" y="118" font-size="10" fill="var(--mu)" text-anchor="middle">$15,000</text>`;
+ const m=Math.max(OWED[d],1);
+ $("wf").innerHTML=[["Penalties owed",-OWED[d],"var(--red)"],["Upstream recovered",REC[d],"var(--grn)"],["Net leakage",-net,"var(--gold)"]].map(r=>`<div class="grp" style="margin-bottom:6px"><span style="width:130px">${r[0]}</span><div class="bar" style="flex:1"><i style="width:${Math.abs(r[1])/m*100}%;background:${r[2]}"></i></div><b class="${r[1]<0?"neg":"pos"}">${r[1]<0?"-":"+"}${fmt(r[1])}</b></div>`).join("");
+ const mo=["Mar","Apr","May","Jun","Jul","Aug","Sep"],cur=[0,3,6][d];
+ const HR=$("hmv").value=="type"?HMT:HM;$("hm").innerHTML="<div></div>"+mo.map(x=>`<div class="mu">${x}</div>`).join("")+Object.keys(HR).map(c=>`<div class="mu">${c}</div>`+HR[c].map((v,i)=>`<div class="s${v} ${i>cur?"sf":""}" title="${c} ${mo[i]}">${i>cur?"":(v||"")}</div>`).join("")).join("");
+ const hot=new Set(ALERTS.filter(a=>a.d<=d&&a.s!="info").map(a=>a.c));
+ $("graph").innerHTML=EDGES.map(e=>{const a=NODES.find(n=>n[0]==e[0]),b=NODES.find(n=>n[0]==e[1]),k=e[2],lab=["conflict","amends","incorporates"].includes(k);const col=k=="conflict"?"var(--red)":k=="amends"?"var(--blu)":k=="incorporates"?"var(--mu)":"var(--ln)";
+  return `<g style="cursor:pointer" onclick="openCite('${e[3]}')"><line x1="${a[2]}" y1="${a[3]}" x2="${b[2]}" y2="${b[3]}" stroke="${col}" stroke-width="${k=="conflict"?3:2}" ${k=="amends"?'stroke-dasharray="6 4"':""}/>${lab?`<text x="${(a[2]+b[2])/2}" y="${(a[3]+b[3])/2-5}" font-size="10" fill="${col}" text-anchor="middle">${k}</text>`:""}</g>`}).join("")
+  +NODES.map(n=>{const h=hot.has(n[6]),st=`fill="var(--pn)" stroke="${h?"var(--red)":"var(--ln)"}" stroke-width="${h?3:1.5}"`,x=n[2],y=n[3];const shape=n[4]=="p"?`<ellipse cx="${x}" cy="${y}" rx="38" ry="16" ${st}/>`:n[4]=="k"?`<rect x="${x-52}" y="${y-10}" width="104" height="20" rx="10" ${st}/>`:`<rect x="${x-45}" y="${y-16}" width="90" height="32" rx="5" ${st}/>`;return `<g style="cursor:pointer" onclick="openCite('${n[5]}')">${shape}<text x="${x}" y="${y+4}" font-size="${n[4]=="c"?11:10}" text-anchor="middle" fill="var(--tx)">${n[1]}</text></g>`}).join("");
+ const fc=$("fc").value,fs=$("fs").value,ord={critical:0,warning:1,info:2};
+ const al=ALERTS.filter(a=>a.d<=d&&(!fc||a.c==fc)&&(!fs||a.s==fs)).sort((a,b)=>ord[a.s]-ord[b.s]);
+ $("alerts").innerHTML=al.map(a=>`<div class="alert ${a.s}"><span class="chip">${a.s}</span> <b>${a.t}</b><br><span class="mu">${a.c} · deadline ${a.dl} · impact ${fmt(a.$)}</span> ${cite(a.cl)}</div>`).join("")||'<p class="mu">No alerts at this date.</p>';
+ $("actions").innerHTML=ACTS.map((a,i)=>{const bad=a.to!==a.addr,st=ack[i]||"draft";return `<div class="draft"><b>${a.n}</b> <span class="chip">confidence ${Math.round(a.cf*100)}%</span> <span class="chip st-partial">Needs human sign-off</span> <span class="chip">${st}</span> ${cite(a.cl)}
+ <div class="mu">To: ${a.to}</div>${bad?`<div class="warnbox">Address mismatch. Contract Notice Address is: ${a.addr}. Send there instead.</div>`:`<div class="ok" style="font-size:12px">Matches contract Notice Address.</div>`}
+ <pre id="pv${i}" class="hide" contenteditable="false">Re: ${a.n}\nPer clause ${CL[a.cl].sec}, we give notice as follows.\n[Draft body goes here]</pre>
+ <div class="grp"><button onclick="pv(${i},0)">Preview</button><button onclick="pv(${i},1)">Edit</button><button onclick="ack[${i}]='approved';render()">Approve</button><button onclick="ack[${i}]='rejected';render()">Reject</button><button onclick="toast('Exported ${a.n}.md')">Export</button></div></div>`}).join("");
+ $("conf").innerHTML="<tr><th>Contracts</th><th>Conflict</th><th>Evidence</th></tr><tr><td>A2 vs B1</td><td>Exclusivity clash</td><td>"+cite("c1")+"</td></tr><tr><td>A3 → A2</td><td>Amendment overrides §4 only</td><td>"+cite("c2")+"</td></tr>";
+ $("prio").innerHTML=al.map(a=>`<li><b>${a.t}</b> by ${a.dl} (${fmt(a.$)})</li>`).join("")||"<li class='mu'>Nothing due yet.</li>";
+ let cum=0;$("wc").innerHTML="<tr><th>Date</th><th>Obligation or event</th><th>Status at selected date</th><th>If no action</th><th>Running worst case</th><th>Clause</th></tr>"+TL.map(r=>{const s=r.done?(r.i<=d?"paid":"upcoming"):(r.i<d?"overdue":r.i==d?"due now":"upcoming");if(!r.done&&r.$)cum+=r.$;return `<tr><td>${r.dt}</td><td>${r.ev}</td><td><span class="chip st-${s=="overdue"?"partial":s=="due now"?"running":s=="paid"?"done":"idle"}">${s}</span></td><td>${r.done?"":r.$==null?'<span class="mu">no figure in contract</span>':fmt(r.$)}</td><td>${r.done?"":fmt(cum)}</td><td>${cite(r.cl)}</td></tr>`}).join("");
+ $("refs").innerHTML=Object.keys(CL).map(k=>`<p>${cite(k)} ${CL[k].txt}</p>`).join("");
+}
+function pv(i,e){const p=$("pv"+i);p.classList.toggle("hide",false);p.contentEditable=e?"true":"false";if(e)p.focus()}
+let rt=[];function replay(){rt.forEach(clearTimeout);$("debate").innerHTML="";rt=TURNS.map((t,i)=>setTimeout(()=>{$("debate").insertAdjacentHTML("beforeend",`<div class="turn ${t[1]}"><b>${t[1]}</b> <span class="chip">round ${t[0]}/3</span> ${cite(t[3])}<br>${t[2]}</div>`)},i*700))}
+$("dbody");$("fc").innerHTML+=C.map(c=>`<option>${c}</option>`).join("");
+$("fc").onchange=$("fs").onchange=render;$("sl").oninput=e=>{d=+e.target.value;render()};
+$("ext").innerHTML="<tr><th>Contract</th><th>Field</th><th>Value</th><th>Confidence</th><th>Citation</th><th>Flag</th><th></th></tr>"+EXT.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="${r[3]<.5?"bad":""}">${Math.round(r[3]*100)}%</td><td>${cite(r[4])}</td><td>${r[5]?'<span class="chip st-partial">'+r[5]+"</span>":""}</td><td><button onclick="toast('Re-extracting ${r[0]} ${r[1]}')">Re-extract this clause</button></td></tr>`).join("");
+$("rul").innerHTML="<tr><th>Claim</th><th>Loki</th><th>Heimdall</th><th>Verdict</th><th>Rationale</th></tr>"+RUL.map(r=>`<tr>${r.map((x,i)=>`<td>${i==3?"<b>"+x+"</b>":x}</td>`).join("")}</tr>`).join("");
+$("grd").innerHTML=`<p>Citations verified: <b class="ok">41</b> · rejected: <b class="bad">2</b></p><h3>Quarantined inputs</h3><div class="scroll"><table>${QUAR.map(q=>`<tr><td>${q[0]}</td><td><code>${q[1]}</code></td><td>${q[2]}</td></tr>`).join("")}</table></div><h3 style="margin-top:10px">Arithmetic overrides</h3><div class="scroll"><table>${OVR.map(o=>`<tr><td>${o[0]}</td><td class="bad">${o[1]}</td><td class="ok">${o[2]}</td></tr>`).join("")}</table></div><h3 style="margin-top:10px">Limits</h3><p>Debate rounds: <b>3 / 3</b> · Clarifications: <b>1 / 2</b> · LLM calls: <b>58 / 120</b> · Tokens: <b>62%</b></p>`;
+$("traps").innerHTML=TRAPS.map(t=>`<div>${t[1]?'<span class="ok">✔</span>':'<span class="mu">○</span>'} ${t[0]} ${t[1]?cite(t[2]):'<span class="chip st-partial">quarantined</span>'}</div>`).join("");
+$("trans").innerHTML="<ol>"+TRANS.map(t=>`<li>${t[0]} → ${t[1]}: ${t[2]}</li>`).join("")+"</ol>";
+$("dos").innerHTML=C.map(c=>{const x=DOS[c];return `<details style="margin-bottom:6px"><summary><b>${c}</b> ${x.t}</summary>${[["Key terms",x.k],["Obligations",x.o],["Timeline",x.l],["Risks",x.r],["Recommended action",x.a]].map(f=>`<p><b>${f[0]}:</b> ${f[1]} ${cite(x.c)} <span class="chip">confidence ${Math.round(x.f*100)}%</span></p>`).join("")}</details>`}).join("");
+tab("war");renderStreams();renderPlan();render();replay();
+</script></body></html>
