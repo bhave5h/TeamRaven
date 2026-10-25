@@ -1,28 +1,49 @@
 import React from "react";
 
-export function LogoMark({ className = "w-6 h-6 text-[#191919]" }: { className?: string }) {
+export function OdinLogoMark({ className = "w-6 h-6 text-[#191919]" }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 256 256"
-      fill="currentColor"
+      viewBox="0 0 48 48"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="Boomerang Logo Mark"
+      aria-label="Odin Aegis Mark"
     >
-      <path d="M 144 256 L 27.598 256 L 144 139.598 Z" />
-      <path d="M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z" />
-      <path d="M 0 204.402 L 0 112 L 92.402 112 Z" />
+      {/* Outer Aegis / Raven Shield */}
+      <path
+        d="M24 4L8 12V24C8 33.6 14.8 42.4 24 44C33.2 42.4 40 33.6 40 24V12L24 4Z"
+        stroke="currentColor"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Central Raven Eye & Core Geometry */}
+      <path
+        d="M24 16L16 26H32L24 16Z"
+        fill="currentColor"
+      />
+      <circle cx="24" cy="32" r="3" fill="currentColor" />
     </svg>
   );
 }
 
 export default function Logo() {
   return (
-    <div className="flex items-center gap-[10px] select-none">
-      <LogoMark className="w-6 h-6 text-[#191919]" />
-      <span className="font-semibold text-base tracking-tight text-[#191919]">
-        Boomerang
-      </span>
+    <div className="flex items-center gap-3 select-none cursor-pointer">
+      <OdinLogoMark className="w-6 h-6 text-[#191919]" />
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <span className="font-serif font-medium text-lg tracking-tight text-[#191919]">
+            ODIN
+          </span>
+          <span className="text-[10px] font-mono tracking-[0.16em] uppercase px-1.5 py-0.5 bg-[#F4F3F3] border border-gray-200/80 rounded text-[#191919]/70 font-semibold">
+            WAR ROOM
+          </span>
+        </div>
+        <span className="text-[10px] text-[#191919]/50 tracking-wide font-sans">
+          Autonomous Contract Intelligence
+        </span>
+      </div>
     </div>
   );
 }

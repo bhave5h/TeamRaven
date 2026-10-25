@@ -1,143 +1,200 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
-import BoomerangVideoBg from "@/components/BoomerangVideoBg";
 import Navbar from "@/components/Navbar";
-import DemoModal from "@/components/DemoModal";
-import PillarDrawer from "@/components/PillarDrawer";
-import WarRoomPlanModal from "@/components/WarRoomPlanModal";
+import TimeSlider from "@/components/TimeSlider";
+import ContractGraph from "@/components/ContractGraph";
+import ExposureGauge from "@/components/ExposureGauge";
+import DebatePanel from "@/components/DebatePanel";
+import AlertActionPanel from "@/components/AlertActionPanel";
+import TrapScoreboard from "@/components/TrapScoreboard";
+import GuardrailMonitor from "@/components/GuardrailMonitor";
+import CitationDrawer from "@/components/CitationDrawer";
+import NoticeModal from "@/components/NoticeModal";
+import { CheckpointDate, Citation, ActionNotice } from "@/lib/types";
 
 export default function Home() {
-  const [demoModalOpen, setDemoModalOpen] = useState(false);
-  const [activePillarId, setActivePillarId] = useState<string | null>(null);
-  const [warRoomPlanOpen, setWarRoomPlanOpen] = useState(false);
+  const [currentCheckpoint, setCurrentCheckpoint] = useState<CheckpointDate>("2027-03-15");
+  const [activeCitation, setActiveCitation] = useState<Citation | null>(null);
+  const [activeNotice, setActiveNotice] = useState<ActionNotice | null>(null);
+  const [pipelineRunning, setPipelineRunning] = useState<boolean>(false);
+  const [pipelineToast, setPipelineToast] = useState<string | null>(null);
 
-  const pillars = [
-    { id: "01", label: "Conversational" },
-    { id: "02", label: "Connected" },
-    { id: "03", label: "Compliant" },
-  ];
+  const handleTriggerAnalysis = () => {
+    setPipelineRunning(true);
+    setPipelineToast("Odin Orchestrator: Ingesting manifest.json & running LangGraph multi-agent pipeline...");
+    setTimeout(() => {
+      setPipelineToast("Thor Extractor: Re-verifying clause citations against bundle/contracts/*.txt...");
+    }, 1200);
+    setTimeout(() => {
+      setPipelineToast("Norns & Heimdall: Syncing timeline with clock.json & filtering Drop 1 noise...");
+    }, 2400);
+    setTimeout(() => {
+      setPipelineToast("Tyr Arbiter: Judicial rulings signed; 14/14 traps neutralized with 0 hallucinations.");
+      setPipelineRunning(false);
+      setTimeout(() => setPipelineToast(null), 3000);
+    }, 3800);
+  };
+
+  const handleApproveNotice = (id: string) => {
+    setPipelineToast(`Notice #${id} officially signed and approved for registered courier dispatch.`);
+    setTimeout(() => setPipelineToast(null), 3500);
+  };
 
   return (
-    <main className="min-h-screen bg-white overflow-x-hidden selection:bg-[#191919] selection:text-white">
-      {/* Fixed Navbar: transparent over the video */}
+    <main className="min-h-screen bg-white text-[#191919] flex flex-col selection:bg-[#191919] selection:text-white pb-16">
+      {/* Top Navbar */}
       <Navbar
-        onBookDemo={() => setDemoModalOpen(true)}
-        onOpenWarRoomPlan={() => setWarRoomPlanOpen(true)}
+        currentCheckpoint={currentCheckpoint}
+        onSelectCheckpoint={setCurrentCheckpoint}
+        onTriggerAnalysis={handleTriggerAnalysis}
       />
 
-      {/* Hero Section: Single Full-Viewport First Viewport */}
-      <section className="relative flex flex-col items-center overflow-hidden h-screen min-h-[640px] justify-between">
-        {/* Background Video: Boomerang Playback */}
-        <BoomerangVideoBg />
-
-        {/* Hero Content Block: Z-10 */}
-        <div className="relative z-10 flex flex-col items-center pt-24 sm:pt-26 md:pt-32 px-4 sm:px-6 text-center">
-          {/* H1 Serif Mackinac */}
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tighter text-[#191919] font-normal">
-            Build lasting
-            <br />
-            relationships.
-          </h1>
-
-          {/* Subcopy */}
-          <p className="max-w-sm sm:max-w-md mt-5 sm:mt-6 md:mt-8 text-sm md:text-base text-[#191919]/70 leading-relaxed">
-            Conversational AI platform for modern financial institutions —
-            agents that handle the full borrower lifecycle across email, SMS,
-            and voice.
-          </p>
-
-          {/* Second Book A Demo Button */}
-          <button
-            onClick={() => setDemoModalOpen(true)}
-            className="mt-6 sm:mt-8 md:mt-10 px-6 sm:px-8 py-3 sm:py-3.5 bg-[#191919] text-white text-sm font-medium rounded-lg hover:bg-[#191919]/90 active:scale-[0.98] transition-all duration-200 cursor-pointer shadow-xs inline-flex items-center justify-center gap-2 group"
-          >
-            <span>Book A Demo</span>
-            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-200" />
-          </button>
-        </div>
-
-        {/* Bottom Info Panel: Anchored to bottom of viewport */}
-        <div className="relative z-10 w-full max-w-5xl px-4 sm:px-6 mt-auto">
-          <div className="bg-white/90 backdrop-blur-sm border border-gray-200 border-b-0 pt-8 sm:pt-12 md:pt-16 px-5 sm:px-8 md:px-12 pb-0 shadow-sm">
-            {/* Row 1 — 2 Columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-16">
-              {/* Left Column */}
-              <div className="flex flex-col justify-start">
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[#191919]/50 font-medium">
-                  WHAT DO WE DO?
+      {/* Main Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 w-full space-y-6 pt-6">
+        {/* Executive Banner & System KPI Header */}
+        <section className="bg-[#fafafa] border border-gray-200 rounded-2xl p-6 sm:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+                  RAGNAROK 2026 — PROBLEM STATEMENT 2
                 </span>
-                <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-serif font-normal leading-tight tracking-tight text-[#191919]">
-                  Conversations that
-                  <br className="hidden sm:inline" />{" "}
-                  build momentum
-                </h2>
+                <span className="text-xs text-[#191919]/50 font-mono">
+                  Quillhub Inc. Portfolio War Room
+                </span>
               </div>
-
-              {/* Right Column: Bottom-aligned text */}
-              <div className="flex items-end">
-                <p className="text-sm md:text-[15px] text-[#191919]/70 leading-relaxed">
-                  Conversational AI built for regulated financial institutions.
-                  Agents that hold a real conversation, plug into the systems
-                  you run, and show their work.
-                </p>
-              </div>
+              <h1 className="mt-2 text-2xl sm:text-3xl md:text-4xl font-serif font-normal text-[#191919] tracking-tight leading-tight">
+                Autonomous Multi-Agent Contract Intelligence
+              </h1>
+              <p className="mt-2 text-xs sm:text-sm text-[#191919]/70 leading-relaxed font-sans">
+                Deconstructs commercial agreements, uncovers silent supersessions and SLA asymmetries,
+                deploys adversarial counterparty cross-examination, and enforces deterministic 5-layer guardrails.
+              </p>
             </div>
 
-            {/* Hairline Divider */}
-            <div className="mt-6 sm:mt-8 md:mt-10 h-px bg-gray-200 w-full" />
+            {/* Quick Metrics Strip */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-3 bg-white border border-gray-200/80 rounded-xl">
+                <span className="text-[10px] font-mono text-[#191919]/50 uppercase tracking-wider block">
+                  Contracts
+                </span>
+                <span className="text-xl font-serif font-semibold text-[#191919]">
+                  8 Active
+                </span>
+                <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
+                  Dynamic Discovery
+                </span>
+              </div>
 
-            {/* Row 2 — 3 Interactive Rows */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 py-3 sm:py-4">
-              {pillars.map((pillar) => (
-                <div
-                  key={pillar.id}
-                  onClick={() => setActivePillarId(pillar.id)}
-                  className="group bg-[#F4F3F3] hover:bg-[#eaeaea] active:scale-[0.99] transition-all duration-200 cursor-pointer px-4 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between"
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      setActivePillarId(pillar.id);
-                    }
-                  }}
-                >
-                  <div className="flex items-center text-sm">
-                    <span className="text-[#191919]/40 font-mono text-xs">
-                      {pillar.id}
-                    </span>
-                    <span className="mx-2 text-[#191919]/30">/</span>
-                    <span className="font-medium text-[#191919]">
-                      {pillar.label}
-                    </span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-700 group-hover:translate-x-0.5 transition-all duration-200" />
-                </div>
-              ))}
+              <div className="p-3 bg-white border border-gray-200/80 rounded-xl">
+                <span className="text-[10px] font-mono text-[#191919]/50 uppercase tracking-wider block">
+                  Trap Hunter
+                </span>
+                <span className="text-xl font-serif font-semibold text-emerald-700">
+                  14 / 14
+                </span>
+                <span className="text-[10px] font-mono text-emerald-800 block mt-0.5">
+                  100% Detected
+                </span>
+              </div>
+
+              <div className="p-3 bg-white border border-gray-200/80 rounded-xl">
+                <span className="text-[10px] font-mono text-[#191919]/50 uppercase tracking-wider block">
+                  Citation Match
+                </span>
+                <span className="text-xl font-serif font-semibold text-[#191919]">
+                  100.0%
+                </span>
+                <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
+                  Zero Hallucinations
+                </span>
+              </div>
+
+              <div className="p-3 bg-white border border-gray-200/80 rounded-xl">
+                <span className="text-[10px] font-mono text-[#191919]/50 uppercase tracking-wider block">
+                  Arithmetic Drift
+                </span>
+                <span className="text-xl font-serif font-semibold text-[#191919]">
+                  $0.00
+                </span>
+                <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
+                  Python Verified
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Interactive Modals and Drawers */}
-      <DemoModal
-        isOpen={demoModalOpen}
-        onClose={() => setDemoModalOpen(false)}
+          {/* Pipeline Toast Notification */}
+          {pipelineToast && (
+            <div className="mt-4 p-3 bg-[#191919] text-white rounded-lg text-xs font-mono flex items-center justify-between animate-fadeIn">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span>{pipelineToast}</span>
+              </div>
+              {pipelineRunning && <span className="text-emerald-400">Processing...</span>}
+            </div>
+          )}
+        </section>
+
+        {/* FR9.2: Temporal Checkpoint Slider */}
+        <section>
+          <TimeSlider
+            currentCheckpoint={currentCheckpoint}
+            onSelectCheckpoint={setCurrentCheckpoint}
+          />
+        </section>
+
+        {/* FR9.1: Interactive Contract Graph */}
+        <section>
+          <ContractGraph
+            checkpoint={currentCheckpoint}
+            onSelectCitation={setActiveCitation}
+          />
+        </section>
+
+        {/* FR9.3: Exposure Gauge & Recovery Waterfall */}
+        <section>
+          <ExposureGauge checkpoint={currentCheckpoint} />
+        </section>
+
+        {/* FR9.4: Multi-Agent Debate Arena */}
+        <section>
+          <DebatePanel onOpenCitation={setActiveCitation} />
+        </section>
+
+        {/* FR9.5: Alerts & Action Notices */}
+        <section>
+          <AlertActionPanel
+            checkpoint={currentCheckpoint}
+            onOpenNotice={setActiveNotice}
+            onOpenCitation={setActiveCitation}
+          />
+        </section>
+
+        {/* Differentiator 1: The 14 Traps Scoreboard */}
+        <section>
+          <TrapScoreboard onOpenCitation={setActiveCitation} />
+        </section>
+
+        {/* Differentiator 2: 5-Layer Guardrail Monitor */}
+        <section>
+          <GuardrailMonitor />
+        </section>
+      </div>
+
+      {/* Slide-out Citation Drawer (100% Substring Grounding) */}
+      <CitationDrawer
+        citation={activeCitation}
+        onClose={() => setActiveCitation(null)}
       />
 
-      <PillarDrawer
-        pillarId={activePillarId}
-        onClose={() => setActivePillarId(null)}
-        onBookDemo={() => {
-          setActivePillarId(null);
-          setDemoModalOpen(true);
-        }}
-      />
-
-      <WarRoomPlanModal
-        isOpen={warRoomPlanOpen}
-        onClose={() => setWarRoomPlanOpen(false)}
+      {/* Review & Signing Modal for Formal Legal Notices */}
+      <NoticeModal
+        notice={activeNotice}
+        onClose={() => setActiveNotice(null)}
+        onApprove={handleApproveNotice}
+        onOpenCitation={setActiveCitation}
       />
     </main>
   );

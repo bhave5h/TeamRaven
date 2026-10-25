@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Build Lasting Relationships",
+  title: "Odin: The Contract War Room | Autonomous Multi-Agent Intelligence",
   description:
-    "Boomerang — Conversational AI platform for modern financial institutions. Agents that handle the full borrower lifecycle across email, SMS, and voice.",
+    "Autonomous Multi-Agent Contract Intelligence and Adversarial Arbitration System for Quillhub Inc. Hackathon Submission for RAGNAROK 2026 — Problem Statement 2.",
   icons: {
     icon: "/favicon.ico",
   },
