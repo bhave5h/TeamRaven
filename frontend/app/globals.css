@@ -2,61 +2,76 @@
 @import url("https://db.onlinewebfonts.com/c/9d4d074c9335825a23cce178ee03b498?family=P22+Mackinac+W01+Book");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'P22 Mackinac W01 Book', Georgia, Cambria, 'Times New Roman', serif;
-  --color-primary: #191919;
-  --color-subtle-bg: #F4F3F3;
-  --color-subtle-hover: #eaeaea;
 }
 
 :root {
   --background: #ffffff;
   --foreground: #191919;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --subtle-bg: #f4f3f3;
+  --subtle-hover: #eaeaea;
+  --text-muted: #6b7280;
   --ease-out-custom: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+.dark {
+  --background: #09090b;
+  --foreground: #f4f4f6;
+  --card-bg: #121216;
+  --card-border: #22222a;
+  --subtle-bg: #181820;
+  --subtle-hover: #22222c;
+  --text-muted: #9ca3af;
+}
+
 body {
-  background-color: #ffffff;
-  color: #191919;
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 /* @apply utility styling for Odin War Room */
 .war-room-card {
-  @apply bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-2xs;
+  @apply bg-white dark:bg-[#121216] border border-gray-200 dark:border-[#22222a] rounded-xl p-4 sm:p-5 shadow-2xs;
 }
 
 .badge-agent-loki {
-  @apply bg-rose-50 text-rose-900 border border-rose-200 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
+  @apply bg-rose-50 text-rose-900 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900/50 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
 }
 
 .badge-agent-heimdall {
-  @apply bg-blue-50 text-blue-900 border border-blue-200 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
+  @apply bg-blue-50 text-blue-900 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-900/50 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
 }
 
 .badge-agent-thor {
-  @apply bg-amber-50 text-amber-900 border border-amber-200 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
+  @apply bg-amber-50 text-amber-900 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/50 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
 }
 
 .badge-agent-tyr {
-  @apply bg-purple-50 text-purple-900 border border-purple-200 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
+  @apply bg-purple-50 text-purple-900 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-900/50 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
 }
 
 .badge-agent-odin {
-  @apply bg-gray-100 text-gray-900 border border-gray-300 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
+  @apply bg-gray-100 text-gray-900 border border-gray-300 dark:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-700 font-mono text-[10px] font-semibold px-2 py-0.5 rounded;
 }
 
 .citation-mark {
-  @apply bg-amber-100 text-amber-950 font-medium px-1 py-0.5 rounded border border-amber-200;
+  @apply bg-amber-100 text-amber-950 dark:bg-amber-950/50 dark:text-amber-200 font-medium px-1 py-0.5 rounded border border-amber-200 dark:border-amber-800/60;
 }
 
 .btn-primary {
-  @apply px-4 py-2 bg-[#191919] text-white text-xs font-medium rounded-lg hover:bg-[#191919]/90 active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center shadow-xs;
+  @apply px-4 py-2 bg-[#191919] text-white dark:bg-white dark:text-[#09090b] text-xs font-medium rounded-lg hover:bg-[#191919]/90 dark:hover:bg-white/90 active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center shadow-xs;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 border border-gray-200 bg-white text-[#191919] text-xs font-medium rounded-lg hover:bg-[#F4F3F3] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center;
+  @apply px-4 py-2 border border-gray-200 dark:border-[#22222a] bg-white dark:bg-[#121216] text-[#191919] dark:text-[#f4f4f6] text-xs font-medium rounded-lg hover:bg-[#F4F3F3] dark:hover:bg-[#181820] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center;
 }
