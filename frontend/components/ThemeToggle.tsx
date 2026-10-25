@@ -48,6 +48,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      suppressHydrationWarning
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to Light Theme" : "Switch to Dark Theme"}
       className="p-2 rounded-lg border border-gray-200 dark:border-[#22222a] bg-[#F4F3F3] dark:bg-[#181820] text-[#191919] dark:text-[#f4f4f6] hover:bg-[#eaeaea] dark:hover:bg-[#22222c] active:scale-[0.96] transition-all cursor-pointer flex items-center justify-center shadow-2xs"

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Citation, TrapItem } from "@/lib/types";
 import { TRAP_ITEMS } from "@/lib/odinData";
+import { formatNumber } from "@/lib/format";
 
 interface TrapScoreboardProps {
   onOpenCitation: (cit: Citation) => void;
@@ -99,9 +100,12 @@ export default function TrapScoreboard({ onOpenCitation }: TrapScoreboardProps) 
             </div>
 
             <div className="mt-4 pt-3 border-t border-gray-200/60 dark:border-[#22222a] flex items-center justify-between text-xs">
-              <span className="font-mono font-semibold text-rose-700 dark:text-rose-400">
+              <span
+                suppressHydrationWarning
+                className="font-mono font-semibold text-rose-700 dark:text-rose-400"
+              >
                 {trap.exposureImpact > 0
-                  ? `$${trap.exposureImpact.toLocaleString()} at risk`
+                  ? `$${formatNumber(trap.exposureImpact)} at risk`
                   : "Quarantined"}
               </span>
 

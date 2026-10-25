@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { CheckpointDate, ContractNode, Citation } from "@/lib/types";
 import { CONTRACT_NODES, CONTRACT_EDGES } from "@/lib/odinData";
+import { formatNumber } from "@/lib/format";
 
 interface ContractGraphProps {
   checkpoint: CheckpointDate;
@@ -285,8 +286,8 @@ export default function ContractGraph({
               </div>
               <div className="flex justify-between py-1.5 border-b border-gray-200/60 dark:border-[#22222a]">
                 <span className="text-[#191919]/60 dark:text-neutral-400">Financial Risk Exposure:</span>
-                <span className="font-mono font-semibold text-rose-700 dark:text-rose-400">
-                  ${selectedNode.exposureAmount.toLocaleString()}
+                <span suppressHydrationWarning className="font-mono font-semibold text-rose-700 dark:text-rose-400">
+                  ${formatNumber(selectedNode.exposureAmount)}
                 </span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-gray-200/60 dark:border-[#22222a]">

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ActionNotice, Citation } from "@/lib/types";
+import { formatNumber } from "@/lib/format";
 
 interface NoticeModalProps {
   notice: ActionNotice | null;
@@ -80,8 +81,8 @@ export default function NoticeModal({
           </div>
           <div className="text-right">
             <span className="text-[#191919]/50 dark:text-neutral-400 block">Financial Recourse:</span>
-            <span className="font-semibold text-emerald-700 dark:text-emerald-400 text-sm">
-              ${notice.financialImpact.toLocaleString()}
+            <span suppressHydrationWarning className="font-semibold text-emerald-700 dark:text-emerald-400 text-sm">
+              ${formatNumber(notice.financialImpact)}
             </span>
             <button
               onClick={() => onOpenCitation(notice.primaryCitation)}

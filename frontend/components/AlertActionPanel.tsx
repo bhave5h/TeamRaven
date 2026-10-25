@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { CheckpointDate, AlertItem, ActionNotice, Citation } from "@/lib/types";
 import { ALERTS_LIST, ACTION_NOTICES } from "@/lib/odinData";
+import { formatNumber } from "@/lib/format";
 
 interface AlertActionPanelProps {
   checkpoint: CheckpointDate;
@@ -147,8 +148,8 @@ export default function AlertActionPanel({
               </p>
 
               <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-[#22222a]">
-                <span className="text-xs font-mono font-semibold text-emerald-700 dark:text-emerald-400">
-                  +${notice.financialImpact.toLocaleString()} recovery
+                <span suppressHydrationWarning className="text-xs font-mono font-semibold text-emerald-700 dark:text-emerald-400">
+                  +${formatNumber(notice.financialImpact)} recovery
                 </span>
 
                 <div className="flex items-center gap-2">

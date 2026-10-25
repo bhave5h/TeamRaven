@@ -3,6 +3,7 @@
 import React from "react";
 import { CheckpointDate } from "@/lib/types";
 import { FINANCIAL_METRICS } from "@/lib/odinData";
+import { formatNumber } from "@/lib/format";
 
 interface ExposureGaugeProps {
   checkpoint: CheckpointDate;
@@ -86,8 +87,8 @@ export default function ExposureGauge({ checkpoint }: ExposureGaugeProps) {
           <div>
             <div className="flex justify-between text-xs mb-1.5">
               <span className="font-medium text-[#191919] dark:text-[#f4f4f6]">Downstream Customer Penalties Owed</span>
-              <span className="font-mono font-semibold text-rose-700 dark:text-rose-400">
-                -${metric.downstreamOwed.toLocaleString()}
+              <span suppressHydrationWarning className="font-mono font-semibold text-rose-700 dark:text-rose-400">
+                -${formatNumber(metric.downstreamOwed)}
               </span>
             </div>
             <div className="h-3 w-full bg-[#F4F3F3] dark:bg-[#181820] rounded-full overflow-hidden border border-transparent dark:border-[#26262e]">
@@ -105,8 +106,8 @@ export default function ExposureGauge({ checkpoint }: ExposureGaugeProps) {
           <div>
             <div className="flex justify-between text-xs mb-1.5">
               <span className="font-medium text-[#191919] dark:text-[#f4f4f6]">Upstream Recoveries Claimed (StratoNode)</span>
-              <span className="font-mono font-semibold text-emerald-700 dark:text-emerald-400">
-                +${metric.upstreamRecoverable.toLocaleString()}
+              <span suppressHydrationWarning className="font-mono font-semibold text-emerald-700 dark:text-emerald-400">
+                +${formatNumber(metric.upstreamRecoverable)}
               </span>
             </div>
             <div className="h-3 w-full bg-[#F4F3F3] dark:bg-[#181820] rounded-full overflow-hidden border border-transparent dark:border-[#26262e]">
@@ -131,8 +132,8 @@ export default function ExposureGauge({ checkpoint }: ExposureGaugeProps) {
               </span>
             </div>
             <div className="text-right">
-              <span className="text-lg font-serif font-bold text-rose-700 dark:text-rose-400">
-                -${metric.netFinancialLeakage.toLocaleString()}
+              <span suppressHydrationWarning className="text-lg font-serif font-bold text-rose-700 dark:text-rose-400">
+                -${formatNumber(metric.netFinancialLeakage)}
               </span>
               <span className="text-[10px] font-mono text-emerald-800 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded block mt-0.5">
                 Saved $36k via Tyr Invalidation
