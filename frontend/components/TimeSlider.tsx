@@ -59,25 +59,25 @@ export default function TimeSlider({
   const progressPercent = (currentIndex / (CHECKPOINTS.length - 1)) * 100;
 
   return (
-    <div className="w-full bg-white dark:bg-[#121216] border border-gray-200 dark:border-[#22222a] rounded-xl p-4 sm:p-5 shadow-2xs select-none transition-colors duration-200">
+    <div className="w-full bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs select-none">
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#191919]/50 dark:text-neutral-400">
+            <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#67776e]">
               TEMPORAL CHECKPOINT SCRUBBER [FR9.2]
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 font-medium">clock.json sync</span>
+            <span className="text-xs font-mono text-emerald-700 font-medium">clock.json sync</span>
           </div>
           <div className="flex items-center gap-3 mt-1">
-            <h2 className="text-xl sm:text-2xl font-serif font-normal text-[#191919] dark:text-[#f4f4f6]">
+            <h2 className="text-xl sm:text-2xl font-serif font-normal text-[#14211a]">
               {currentCp.date}
             </h2>
-            <span className="text-xs font-mono px-2 py-0.5 bg-[#F4F3F3] dark:bg-[#181820] text-[#191919]/70 dark:text-neutral-300 rounded font-medium border border-transparent dark:border-[#26262e]">
+            <span className="text-xs font-mono px-2 py-0.5 bg-[#f3f8f5] text-[#14211a] rounded font-medium border border-[#dce8e1]">
               {currentCp.label}
             </span>
-            <span className="hidden md:inline-block text-[11px] font-mono text-[#191919]/50 dark:text-neutral-500">
+            <span className="hidden md:inline-block text-[11px] font-mono text-[#67776e]">
               Step {currentIndex + 1} of {CHECKPOINTS.length}
             </span>
           </div>
@@ -90,8 +90,8 @@ export default function TimeSlider({
             aria-label={isPlaying ? "Pause Timeline Simulation" : "Auto-Play Timeline Simulation"}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
               isPlaying
-                ? "bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-300 dark:border-amber-800"
-                : "border-gray-200 dark:border-[#26262e] text-[#191919] dark:text-[#f4f4f6] hover:bg-[#F4F3F3] dark:hover:bg-[#181820]"
+                ? "bg-amber-50 text-amber-900 border-amber-300"
+                : "border-[#dce8e1] text-[#14211a] hover:bg-[#f3f8f5]"
             }`}
           >
             <span>{isPlaying ? "⏸" : "▶"}</span>
@@ -101,7 +101,7 @@ export default function TimeSlider({
           <button
             onClick={handlePrevious}
             disabled={currentIndex === 0}
-            className="px-3 py-1.5 border border-gray-200 dark:border-[#26262e] text-xs font-medium rounded-lg hover:bg-[#F4F3F3] dark:hover:bg-[#181820] text-[#191919] dark:text-[#f4f4f6] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+            className="px-3 py-1.5 border border-[#dce8e1] text-xs font-medium rounded-lg hover:bg-[#f3f8f5] text-[#14211a] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
           >
             ← Prev
           </button>
@@ -109,7 +109,7 @@ export default function TimeSlider({
           <button
             onClick={handleNext}
             disabled={currentIndex === CHECKPOINTS.length - 1}
-            className="px-3 py-1.5 bg-[#191919] dark:bg-white text-white dark:text-[#09090b] text-xs font-medium rounded-lg hover:bg-[#191919]/90 dark:hover:bg-white/90 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer shadow-xs"
+            className="px-3 py-1.5 bg-[#14211a] text-white text-xs font-medium rounded-lg hover:bg-[#14211a]/90 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer shadow-xs"
           >
             Advance →
           </button>
@@ -120,10 +120,10 @@ export default function TimeSlider({
       <div className="my-5 px-1">
         <div className="relative flex items-center">
           {/* Base background bar */}
-          <div className="absolute left-0 right-0 h-2 bg-[#F4F3F3] dark:bg-[#181820] rounded-full overflow-hidden border border-transparent dark:border-[#22222a]">
+          <div className="absolute left-0 right-0 h-2 bg-[#f3f8f5] rounded-full overflow-hidden border border-[#dce8e1]">
             {/* Filled progress bar */}
             <div
-              className="h-full bg-[#191919] dark:bg-white transition-all duration-300 ease-out"
+              className="h-full bg-[#14211a] transition-all duration-300 ease-out"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -155,17 +155,17 @@ export default function TimeSlider({
                 <div
                   className={`w-3 h-3 rounded-full border-2 transition-all duration-200 ${
                     isCurrent
-                      ? "border-[#191919] dark:border-white bg-[#191919] dark:bg-white scale-125"
+                      ? "border-[#14211a] bg-[#14211a] scale-125"
                       : isPassed
-                      ? "border-[#191919] dark:border-white bg-[#191919] dark:bg-white"
-                      : "border-gray-300 dark:border-neutral-700 bg-white dark:bg-[#121216]"
+                      ? "border-[#14211a] bg-[#14211a]"
+                      : "border-[#dce8e1] bg-white"
                   }`}
                 />
                 <span
                   className={`mt-1.5 font-mono text-[11px] font-medium transition-colors ${
                     isCurrent
-                      ? "text-[#191919] dark:text-white font-semibold"
-                      : "text-[#191919]/50 dark:text-neutral-500 hover:text-[#191919] dark:hover:text-neutral-300"
+                      ? "text-[#14211a] font-semibold"
+                      : "text-[#67776e] hover:text-[#14211a]"
                   }`}
                 >
                   {cp.date}
@@ -186,25 +186,25 @@ export default function TimeSlider({
               onClick={() => onSelectCheckpoint(cp.date)}
               className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                 isSelected
-                  ? "border-[#191919] dark:border-neutral-400 bg-[#F4F3F3]/80 dark:bg-[#181820] shadow-2xs ring-1 ring-black/5 dark:ring-white/10"
-                  : "border-gray-100 dark:border-[#22222a] bg-white dark:bg-[#121216] hover:border-gray-200 dark:hover:border-neutral-700"
+                  ? "border-[#14211a] bg-[#f3f8f5] shadow-2xs ring-1 ring-black/5"
+                  : "border-[#dce8e1] bg-white hover:border-[#14211a]/30"
               }`}
             >
               <div className="flex justify-between items-center mb-1">
-                <span className="font-mono font-semibold text-[#191919] dark:text-[#f4f4f6]">
+                <span className="font-mono font-semibold text-[#14211a]">
                   {cp.date}
                 </span>
                 <span
                   className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
                     isSelected
-                      ? "bg-[#191919] text-white dark:bg-white dark:text-[#09090b] font-bold"
-                      : "bg-gray-100 dark:bg-[#202028] text-[#191919]/60 dark:text-neutral-400"
+                      ? "bg-[#14211a] text-white font-bold"
+                      : "bg-[#f3f8f5] border border-[#dce8e1] text-[#67776e]"
                   }`}
                 >
                   Step {idx + 1}
                 </span>
               </div>
-              <p className="text-[#191919]/70 dark:text-neutral-300 text-[11px] leading-relaxed">
+              <p className="text-[#67776e] text-[11px] leading-relaxed">
                 {cp.description}
               </p>
             </div>

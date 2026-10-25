@@ -47,212 +47,216 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#ffffff] text-[#191919] flex flex-col transition-colors duration-200">
+    <div className="min-h-screen bg-[#f8faf9] text-[#14211a] flex flex-col items-center">
       {/* Tactical Entry Preloader */}
       <Preloader />
 
-      {/* Top Navbar: Brand + Active Clock + Action + Theme Toggle */}
-      <Navbar
-        currentCheckpoint={currentCheckpoint}
-        onSelectCheckpoint={setCurrentCheckpoint}
-        onTriggerAnalysis={handleTriggerAnalysis}
-      />
-
-      {/* Main Single-Page Content Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 w-full space-y-6 pt-6">
-        {/* Executive Banner & System KPI Header */}
-        <section className="bg-[#fafafa] dark:bg-[#121216] border border-gray-200 dark:border-[#22222a] rounded-2xl p-6 sm:p-8 transition-colors duration-200">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/40">
-                  RAGNAROK 2026 — PROBLEM STATEMENT 2
-                </span>
-                <span className="text-xs text-[#191919]/50 dark:text-neutral-400 font-mono">
-                  Quillhub Inc. Portfolio War Room
-                </span>
-              </div>
-              <h1 className="mt-2 text-2xl sm:text-3xl md:text-4xl font-serif font-normal text-[#191919] dark:text-white tracking-tight leading-tight">
-                Autonomous Multi-Agent Contract Intelligence
-              </h1>
-              <p className="mt-2 text-xs sm:text-sm text-[#191919]/70 dark:text-neutral-300 leading-relaxed font-sans">
-                Deconstructs commercial agreements, uncovers silent supersessions and SLA asymmetries,
-                deploys adversarial counterparty cross-examination, and enforces deterministic 5-layer guardrails.
-              </p>
-            </div>
-
-            {/* Quick Metrics Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="p-3 bg-white dark:bg-[#16161c] border border-gray-200/80 dark:border-[#26262e] rounded-xl">
-                <span className="text-[10px] font-mono text-[#191919]/50 dark:text-neutral-400 uppercase tracking-wider block">
-                  Contracts
-                </span>
-                <span className="text-xl font-serif font-semibold text-[#191919] dark:text-white">
-                  8 Active
-                </span>
-                <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400 block mt-0.5">
-                  Dynamic Discovery
-                </span>
-              </div>
-
-              <div className="p-3 bg-white dark:bg-[#16161c] border border-gray-200/80 dark:border-[#26262e] rounded-xl">
-                <span className="text-[10px] font-mono text-[#191919]/50 dark:text-neutral-400 uppercase tracking-wider block">
-                  Trap Hunter
-                </span>
-                <span className="text-xl font-serif font-semibold text-emerald-700 dark:text-emerald-400">
-                  14 / 14
-                </span>
-                <span className="text-[10px] font-mono text-emerald-800 dark:text-emerald-300 block mt-0.5">
-                  100% Detected
-                </span>
-              </div>
-
-              <div className="p-3 bg-white dark:bg-[#16161c] border border-gray-200/80 dark:border-[#26262e] rounded-xl">
-                <span className="text-[10px] font-mono text-[#191919]/50 dark:text-neutral-400 uppercase tracking-wider block">
-                  Citation Match
-                </span>
-                <span className="text-xl font-serif font-semibold text-[#191919] dark:text-white">
-                  100.0%
-                </span>
-                <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400 block mt-0.5">
-                  Zero Hallucinations
-                </span>
-              </div>
-
-              <div className="p-3 bg-white dark:bg-[#16161c] border border-gray-200/80 dark:border-[#26262e] rounded-xl">
-                <span className="text-[10px] font-mono text-[#191919]/50 dark:text-neutral-400 uppercase tracking-wider block">
-                  Arithmetic Drift
-                </span>
-                <span className="text-xl font-serif font-semibold text-[#191919] dark:text-white">
-                  $0.00
-                </span>
-                <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400 block mt-0.5">
-                  Python Verified
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Pipeline Toast Notification */}
-          {pipelineToast && (
-            <div className="mt-4 p-3 bg-[#191919] dark:bg-white text-white dark:text-[#09090b] rounded-lg text-xs font-mono flex items-center justify-between shadow-md">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span>{pipelineToast}</span>
-              </div>
-              {pipelineRunning && (
-                <span className="text-emerald-400 dark:text-emerald-700 font-semibold">
-                  Processing...
-                </span>
-              )}
-            </div>
-          )}
-        </section>
-
-        {/* Section 1: FR9.2 Temporal Checkpoint Scrubber */}
-        <section aria-label="Temporal Checkpoint Slider">
-          <TimeSlider
-            currentCheckpoint={currentCheckpoint}
-            onSelectCheckpoint={setCurrentCheckpoint}
-          />
-        </section>
-
-        {/* Section 2: FR9.1 Interactive Contract Graph */}
-        <section aria-label="Contract Relationship Graph">
-          <ContractGraph
-            checkpoint={currentCheckpoint}
-            onSelectCitation={setActiveCitation}
-          />
-        </section>
-
-        {/* Section 3: FR9.3 Financial Exposure & Recovery Waterfall */}
-        <section aria-label="Financial Exposure Gauges" className="space-y-6">
-          <ExposureGauge checkpoint={currentCheckpoint} />
-          <RiskHeatmap
-            checkpoint={currentCheckpoint}
-            onOpenCitation={setActiveCitation}
-          />
-        </section>
-
-        {/* Section 4: FR9.4 Live Multi-Agent Debate Arena */}
-        <section aria-label="Multi-Agent Debate Arena">
-          <DebatePanel onOpenCitation={setActiveCitation} />
-        </section>
-
-        {/* Section 5: FR9.5 Operational Alerts & Legal Notice Action Center */}
-        <section aria-label="Alerts and Action Center">
-          <AlertActionPanel
-            checkpoint={currentCheckpoint}
-            onOpenNotice={setActiveNotice}
-            onOpenCitation={setActiveCitation}
-          />
-        </section>
-
-        {/* Section 6: Differentiator - The 14 Traps Scoreboard */}
-        <section aria-label="The 14 Traps Matrix">
-          <TrapScoreboard onOpenCitation={setActiveCitation} />
-        </section>
-
-        {/* Section 7: FR8 Portfolio & Analytical Report Dossiers */}
-        <section aria-label="Portfolio Reports">
-          <PortfolioReports />
-        </section>
-
-        {/* Section 8: Differentiator - 5-Layer Deterministic Guardrail Telemetry */}
-        <section aria-label="5-Layer Guardrail Monitor">
-          <GuardrailMonitor />
-        </section>
-
-        {/* Section 9: NFR2 & NFR4 Deterministic Verification Audit Trail Table */}
-        <section aria-label="Verification Audit Event Log">
-          <GuardrailAuditTable />
-        </section>
-      </div>
-
-      {/* Full-width Ridgeline Dither Site Footer */}
-      <div className="w-full mt-16 border-t border-gray-200">
-        <RidgelineDitherFooter
-          name="Odin War Room"
-          tagline="Autonomous multi-agent contract intelligence and real-time legal risk arbitration for enterprise portfolios."
-          brandHref="#"
-          preset="evergreen"
-          columns={[
-            {
-              title: "War Room",
-              links: [
-                { label: "Contract Universe" },
-                { label: "Temporal Scrubber" },
-                { label: "Waterfall Analysis" },
-                { label: "Risk Heatmap", badge: "Live" },
-              ],
-            },
-            {
-              title: "Multi-Agent Arena",
-              links: [
-                { label: "Loki (Adversary)" },
-                { label: "Heimdall (Radar)" },
-                { label: "Tyr (Arbiter)" },
-                { label: "Mimir (Supervisor)" },
-              ],
-            },
-            {
-              title: "Evaluation & Traps",
-              links: [
-                { label: "The 14 Traps", badge: "14/14" },
-                { label: "Citation Guardrails" },
-                { label: "Manifest Ingestion" },
-                { label: "Quillhub Inc. Audit" },
-              ],
-            },
-          ]}
-          socials={[
-            { icon: "github", href: "https://github.com/bhave5h/TeamRaven" },
-            { icon: "x", href: "https://x.com" },
-            { icon: "linkedin", href: "https://linkedin.com" },
-          ]}
-          copyright="© 2027 Quillhub Inc. / TeamRaven. Ragnarok Hackathon 2026 Problem Statement 2."
-          credit={{ label: "Team Raven", href: "https://github.com/bhave5h/TeamRaven" }}
+      {/* Centered Structured Frame (1120px max-width, matching Footer boundaries) */}
+      <div className="w-full max-w-[1120px] mx-auto border-x border-[#dce8e1] bg-white min-h-screen flex flex-col shadow-2xs">
+        {/* Top Navbar: Brand + Active Clock + Action */}
+        <Navbar
+          currentCheckpoint={currentCheckpoint}
+          onSelectCheckpoint={setCurrentCheckpoint}
+          onTriggerAnalysis={handleTriggerAnalysis}
         />
+
+        {/* Main Single-Page Content Container */}
+        <main className="w-full px-[clamp(20px,3.2vw,30px)] py-6 sm:py-8 space-y-6 sm:space-y-8 flex-1">
+          {/* Executive Banner & System KPI Header */}
+          <section className="bg-[#f3f8f5] border border-[#dce8e1] rounded-xl p-5 sm:p-7">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full bg-white text-emerald-800 border border-[#dce8e1]">
+                    RAGNAROK 2026 — PROBLEM STATEMENT 2
+                  </span>
+                  <span className="text-xs text-[#67776e] font-mono">
+                    Quillhub Inc. Portfolio War Room
+                  </span>
+                </div>
+                <h1 className="mt-2.5 text-2xl sm:text-3xl md:text-4xl font-serif font-normal text-[#14211a] tracking-tight leading-tight">
+                  Autonomous Multi-Agent Contract Intelligence
+                </h1>
+                <p className="mt-2 text-xs sm:text-sm text-[#67776e] leading-relaxed font-sans">
+                  Deconstructs commercial agreements, uncovers silent supersessions and SLA asymmetries,
+                  deploys adversarial counterparty cross-examination, and enforces deterministic 5-layer guardrails.
+                </p>
+              </div>
+
+              {/* Quick Metrics Strip */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
+                  <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
+                    Contracts
+                  </span>
+                  <span className="text-xl font-serif font-semibold text-[#14211a]">
+                    8 Active
+                  </span>
+                  <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
+                    Dynamic Discovery
+                  </span>
+                </div>
+
+                <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
+                  <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
+                    Trap Hunter
+                  </span>
+                  <span className="text-xl font-serif font-semibold text-emerald-700">
+                    14 / 14
+                  </span>
+                  <span className="text-[10px] font-mono text-emerald-800 block mt-0.5">
+                    100% Detected
+                  </span>
+                </div>
+
+                <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
+                  <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
+                    Citation Match
+                  </span>
+                  <span className="text-xl font-serif font-semibold text-[#14211a]">
+                    100.0%
+                  </span>
+                  <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
+                    Zero Hallucinations
+                  </span>
+                </div>
+
+                <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
+                  <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
+                    Arithmetic Drift
+                  </span>
+                  <span className="text-xl font-serif font-semibold text-[#14211a]">
+                    $0.00
+                  </span>
+                  <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
+                    Python Verified
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Pipeline Toast Notification */}
+            {pipelineToast && (
+              <div className="mt-4 p-3 bg-[#14211a] text-white rounded-lg text-xs font-mono flex items-center justify-between shadow-md border border-[#dce8e1]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span>{pipelineToast}</span>
+                </div>
+                {pipelineRunning && (
+                  <span className="text-emerald-400 font-semibold">
+                    Processing...
+                  </span>
+                )}
+              </div>
+            )}
+          </section>
+
+          {/* Section 1: FR9.2 Temporal Checkpoint Scrubber */}
+          <section aria-label="Temporal Checkpoint Slider">
+            <TimeSlider
+              currentCheckpoint={currentCheckpoint}
+              onSelectCheckpoint={setCurrentCheckpoint}
+            />
+          </section>
+
+          {/* Section 2: FR9.1 Interactive Contract Graph */}
+          <section aria-label="Contract Relationship Graph">
+            <ContractGraph
+              checkpoint={currentCheckpoint}
+              onSelectCitation={setActiveCitation}
+            />
+          </section>
+
+          {/* Section 3: FR9.3 Financial Exposure & Recovery Waterfall */}
+          <section aria-label="Financial Exposure Gauges" className="space-y-6 sm:space-y-8">
+            <ExposureGauge checkpoint={currentCheckpoint} />
+            <RiskHeatmap
+              checkpoint={currentCheckpoint}
+              onOpenCitation={setActiveCitation}
+            />
+          </section>
+
+          {/* Section 4: FR9.4 Live Multi-Agent Debate Arena */}
+          <section aria-label="Multi-Agent Debate Arena">
+            <DebatePanel onOpenCitation={setActiveCitation} />
+          </section>
+
+          {/* Section 5: FR9.5 Operational Alerts & Legal Notice Action Center */}
+          <section aria-label="Alerts and Action Center">
+            <AlertActionPanel
+              checkpoint={currentCheckpoint}
+              onOpenNotice={setActiveNotice}
+              onOpenCitation={setActiveCitation}
+            />
+          </section>
+
+          {/* Section 6: Differentiator - The 14 Traps Scoreboard */}
+          <section aria-label="The 14 Traps Matrix">
+            <TrapScoreboard onOpenCitation={setActiveCitation} />
+          </section>
+
+          {/* Section 7: FR8 Portfolio & Analytical Report Dossiers */}
+          <section aria-label="Portfolio Reports">
+            <PortfolioReports />
+          </section>
+
+          {/* Section 8: Differentiator - 5-Layer Deterministic Guardrail Telemetry */}
+          <section aria-label="5-Layer Guardrail Monitor">
+            <GuardrailMonitor />
+          </section>
+
+          {/* Section 9: NFR2 & NFR4 Deterministic Verification Audit Trail Table */}
+          <section aria-label="Verification Audit Event Log">
+            <GuardrailAuditTable />
+          </section>
+        </main>
+
+        {/* Ridgeline Dither Site Footer (Enclosed within shared container width) */}
+        <div className="w-full border-t border-[#dce8e1]">
+          <RidgelineDitherFooter
+            name="Odin War Room"
+            tagline="Autonomous multi-agent contract intelligence and real-time legal risk arbitration for enterprise portfolios."
+            brandHref="#"
+            preset="evergreen"
+            maxWidth="100%"
+            columns={[
+              {
+                title: "War Room",
+                links: [
+                  { label: "Contract Universe" },
+                  { label: "Temporal Scrubber" },
+                  { label: "Waterfall Analysis" },
+                  { label: "Risk Heatmap", badge: "Live" },
+                ],
+              },
+              {
+                title: "Multi-Agent Arena",
+                links: [
+                  { label: "Loki (Adversary)" },
+                  { label: "Heimdall (Radar)" },
+                  { label: "Tyr (Arbiter)" },
+                  { label: "Mimir (Supervisor)" },
+                ],
+              },
+              {
+                title: "Evaluation & Traps",
+                links: [
+                  { label: "The 14 Traps", badge: "14/14" },
+                  { label: "Citation Guardrails" },
+                  { label: "Manifest Ingestion" },
+                  { label: "Quillhub Inc. Audit" },
+                ],
+              },
+            ]}
+            socials={[
+              { icon: "github", href: "https://github.com/bhave5h/TeamRaven" },
+              { icon: "x", href: "https://x.com" },
+              { icon: "linkedin", href: "https://linkedin.com" },
+            ]}
+            copyright="© 2027 Quillhub Inc. / TeamRaven. Ragnarok Hackathon 2026 Problem Statement 2."
+            credit={{ label: "Team Raven", href: "https://github.com/bhave5h/TeamRaven" }}
+          />
+        </div>
       </div>
 
       {/* Slide-out Citation Drawer (100% Substring Grounding) */}
@@ -268,6 +272,6 @@ export default function Home() {
         onApprove={handleApproveNotice}
         onOpenCitation={setActiveCitation}
       />
-    </main>
+    </div>
   );
 }

@@ -33,7 +33,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col font-sans overflow-x-hidden selection:bg-[#191919] dark:selection:bg-white selection:text-white dark:selection:text-[#09090b]">
+      <body className="min-h-full flex flex-col font-sans overflow-x-clip bg-[#f8faf9] text-[#14211a] selection:bg-[#14211a] selection:text-white">
         {children}
       </body>
     </html>

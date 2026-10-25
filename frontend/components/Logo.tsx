@@ -1,6 +1,6 @@
 import React from "react";
 
-export function OdinLogoMark({ className = "w-6 h-6 text-[#191919] dark:text-[#f4f4f6]" }: { className?: string }) {
+export function OdinLogoMark({ className = "w-6 h-6 text-[#14211a]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 48 48"
@@ -30,17 +30,17 @@ export function OdinLogoMark({ className = "w-6 h-6 text-[#191919] dark:text-[#f
 export default function Logo() {
   return (
     <div className="flex items-center gap-3 select-none cursor-pointer">
-      <OdinLogoMark className="w-6 h-6 text-[#191919] dark:text-[#f4f4f6]" />
+      <OdinLogoMark className="w-6 h-6 text-[#14211a]" />
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <span className="font-serif font-medium text-lg tracking-tight text-[#191919] dark:text-[#f4f4f6]">
+          <span className="font-serif font-medium text-lg tracking-tight text-[#14211a]">
             ODIN
           </span>
-          <span className="text-[10px] font-mono tracking-[0.16em] uppercase px-1.5 py-0.5 bg-[#F4F3F3] dark:bg-[#181820] border border-gray-200/80 dark:border-[#26262e] rounded text-[#191919]/70 dark:text-neutral-300 font-semibold">
+          <span className="text-[10px] font-mono tracking-[0.16em] uppercase px-1.5 py-0.5 bg-[#f3f8f5] border border-[#dce8e1] rounded text-[#14211a] font-semibold">
             WAR ROOM
           </span>
         </div>
-        <span className="text-[10px] text-[#191919]/50 dark:text-neutral-400 tracking-wide font-sans">
+        <span className="text-[10px] text-[#67776e] tracking-wide font-sans">
           Autonomous Contract Intelligence
         </span>
       </div>

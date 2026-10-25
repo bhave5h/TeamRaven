@@ -109,18 +109,18 @@ An automated multi-agent audit of the Quillhub commercial contract portfolio was
   const currentDoc = reportsContent[selectedReport];
 
   return (
-    <div className="w-full bg-white dark:bg-[#121216] border border-gray-200 dark:border-[#22222a] rounded-xl p-4 sm:p-5 shadow-2xs transition-colors duration-200 select-none">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 dark:border-[#22222a] gap-3">
+    <div className="w-full bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs select-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#dce8e1] gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#191919]/50 dark:text-neutral-400">
+            <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#67776e]">
               SYNTHESIS & REPORT DOSSIERS [FR8]
             </span>
-            <span className="text-xs px-2 py-0.5 bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-900/40 rounded font-mono font-medium">
+            <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-900 border border-blue-200 rounded font-mono font-medium">
               100% Citation Index
             </span>
           </div>
-          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#191919] dark:text-[#f4f4f6] mt-0.5">
+          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#14211a] mt-0.5">
             Contract Intelligence & Cross-Portfolio Risk Dossiers
           </h3>
         </div>
@@ -134,7 +134,7 @@ An automated multi-agent audit of the Quillhub commercial contract portfolio was
             a.download = `${selectedReport}_report.md`;
             a.click();
           }}
-          className="px-3.5 py-1.5 bg-[#191919] dark:bg-white text-white dark:text-[#09090b] text-xs font-medium rounded-lg hover:bg-[#191919]/90 dark:hover:bg-white/90 active:scale-[0.98] transition-all cursor-pointer self-start sm:self-auto shadow-xs"
+          className="px-3.5 py-1.5 bg-[#14211a] text-white text-xs font-medium rounded-lg hover:bg-[#14211a]/90 active:scale-[0.98] transition-all cursor-pointer self-start sm:self-auto shadow-xs"
         >
           Download Markdown (.md) ↓
         </button>
@@ -155,8 +155,8 @@ An automated multi-agent audit of the Quillhub commercial contract portfolio was
             onClick={() => setSelectedReport(item.id as typeof selectedReport)}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
               selectedReport === item.id
-                ? "bg-[#191919] dark:bg-white text-white dark:text-[#09090b] shadow-2xs font-semibold"
-                : "bg-[#F4F3F3] dark:bg-[#181820] text-[#191919]/70 dark:text-neutral-300 hover:text-[#191919] dark:hover:text-white"
+                ? "bg-[#14211a] text-white shadow-2xs font-semibold"
+                : "bg-[#f3f8f5] border border-[#dce8e1] text-[#67776e] hover:text-[#14211a]"
             }`}
           >
             {item.label}
@@ -165,12 +165,12 @@ An automated multi-agent audit of the Quillhub commercial contract portfolio was
       </div>
 
       {/* Formatted Markdown Content Box */}
-      <div className="mt-2 p-5 sm:p-6 bg-[#fafafa] dark:bg-[#181820]/70 border border-gray-200/80 dark:border-[#22222a] rounded-xl text-xs sm:text-sm text-[#191919]/90 dark:text-neutral-200 font-serif leading-relaxed space-y-4 max-h-[360px] overflow-y-auto">
-        <div className="border-b border-gray-200 dark:border-[#26262e] pb-3">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-[#191919]/50 dark:text-neutral-400 block">
+      <div className="mt-2 p-5 sm:p-6 bg-[#f3f8f5] border border-[#dce8e1] rounded-xl text-xs sm:text-sm text-[#14211a]/90 font-serif leading-relaxed space-y-4 max-h-[360px] overflow-y-auto">
+        <div className="border-b border-[#dce8e1] pb-3">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#67776e] block">
             {currentDoc.subtitle}
           </span>
-          <h4 className="text-base sm:text-lg font-serif font-normal text-[#191919] dark:text-white mt-0.5">
+          <h4 className="text-base sm:text-lg font-serif font-normal text-[#14211a] mt-0.5">
             {currentDoc.title}
           </h4>
         </div>

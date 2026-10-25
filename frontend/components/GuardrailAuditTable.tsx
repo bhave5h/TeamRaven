@@ -68,27 +68,27 @@ export default function GuardrailAuditTable() {
   );
 
   return (
-    <div className="w-full bg-white dark:bg-[#121216] border border-gray-200 dark:border-[#22222a] rounded-xl p-4 sm:p-5 shadow-2xs transition-colors duration-200 select-none">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gray-100 dark:border-[#22222a] gap-3">
+    <div className="w-full bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs select-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#dce8e1] gap-3">
         <div>
-          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#191919]/50 dark:text-neutral-400">
+          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#67776e]">
             AUDIT LOGS & TRACES [NFR2, NFR4]
           </span>
-          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#191919] dark:text-[#f4f4f6] mt-0.5">
+          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#14211a] mt-0.5">
             Deterministic Verification Event Log
           </h3>
         </div>
 
         {/* Filter buttons */}
-        <div className="flex items-center gap-1.5 bg-[#F4F3F3] dark:bg-[#181820] p-1 rounded-lg text-xs">
+        <div className="flex items-center gap-1.5 bg-[#f3f8f5] border border-[#dce8e1] p-1 rounded-lg text-xs">
           {["all", "citation", "arithmetic", "schema"].map((t) => (
             <button
               key={t}
               onClick={() => setFilterType(t as typeof filterType)}
               className={`px-3 py-1 rounded-md capitalize transition-colors cursor-pointer ${
                 filterType === t
-                  ? "bg-white dark:bg-[#22222c] text-[#191919] dark:text-white shadow-2xs font-semibold"
-                  : "text-[#191919]/60 dark:text-neutral-400 hover:text-[#191919] dark:hover:text-white"
+                  ? "bg-white text-[#14211a] border border-[#dce8e1] shadow-2xs font-semibold"
+                  : "text-[#67776e] hover:text-[#14211a]"
               }`}
             >
               {t}
@@ -100,7 +100,7 @@ export default function GuardrailAuditTable() {
       <div className="overflow-x-auto pt-3">
         <table className="w-full text-left text-xs font-sans">
           <thead>
-            <tr className="border-b border-gray-200 dark:border-[#22222a] text-[#191919]/50 dark:text-neutral-400 uppercase tracking-wider font-mono text-[10px]">
+            <tr className="border-b border-[#dce8e1] text-[#67776e] uppercase tracking-wider font-mono text-[10px]">
               <th className="pb-2.5 font-semibold">Audit ID</th>
               <th className="pb-2.5 font-semibold">Guardrail Layer</th>
               <th className="pb-2.5 font-semibold">Target Source</th>
@@ -108,21 +108,21 @@ export default function GuardrailAuditTable() {
               <th className="pb-2.5 font-semibold text-right">Verification</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-[#1d1d24] text-[#191919]/80 dark:text-neutral-200">
+          <tbody className="divide-y divide-[#dce8e1] text-[#14211a]/85">
             {filtered.map((item) => (
-              <tr key={item.id} className="hover:bg-[#fafafa] dark:hover:bg-[#181820]/60 transition-colors">
-                <td className="py-3 font-mono font-semibold text-[#191919] dark:text-white">
+              <tr key={item.id} className="hover:bg-[#f3f8f5]/40 transition-colors">
+                <td className="py-3 font-mono font-semibold text-[#14211a]">
                   {item.id}
                 </td>
                 <td className="py-3 font-medium">{item.layer}</td>
-                <td className="py-3 font-mono text-[11px] text-[#191919]/60 dark:text-neutral-400">
+                <td className="py-3 font-mono text-[11px] text-[#67776e]">
                   {item.target}
                 </td>
                 <td className="py-3 max-w-md font-serif italic text-xs">
                   &ldquo;{item.claim}&rdquo;
                 </td>
                 <td className="py-3 text-right">
-                  <span className="font-mono text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/40">
+                  <span className="font-mono text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
                     {item.result}
                   </span>
                 </td>

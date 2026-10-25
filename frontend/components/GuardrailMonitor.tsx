@@ -47,17 +47,17 @@ export default function GuardrailMonitor() {
   ];
 
   return (
-    <div className="w-full bg-white dark:bg-[#121216] border border-gray-200 dark:border-[#22222a] rounded-xl p-4 sm:p-5 shadow-2xs select-none transition-colors duration-200">
-      <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-[#22222a]">
+    <div className="w-full bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs select-none">
+      <div className="flex items-center justify-between pb-3 border-b border-[#dce8e1]">
         <div>
-          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#191919]/50 dark:text-neutral-400">
+          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#67776e]">
             INTEGRITY & OBSERVABILITY ENGINE [DIFFERENTIATOR]
           </span>
-          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#191919] dark:text-[#f4f4f6] mt-0.5">
+          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#14211a] mt-0.5">
             5-Layer Deterministic Guardrail Telemetry
           </h3>
         </div>
-        <span className="text-xs font-mono font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200/60 dark:border-emerald-800/40">
+        <span className="text-xs font-mono font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
           All 5 Layers Passing
         </span>
       </div>
@@ -66,22 +66,22 @@ export default function GuardrailMonitor() {
         {guardrails.map((g, idx) => (
           <div
             key={idx}
-            className="p-3.5 bg-[#fafafa] dark:bg-[#16161c] border border-gray-200 dark:border-[#26262e] rounded-xl flex flex-col justify-between"
+            className="p-3.5 bg-[#f3f8f5] border border-[#dce8e1] rounded-xl flex flex-col justify-between"
           >
             <div>
-              <div className="flex justify-between items-center mb-1 text-[10px] font-mono text-[#191919]/50 dark:text-neutral-400">
+              <div className="flex justify-between items-center mb-1 text-[10px] font-mono text-[#67776e]">
                 <span>{g.layer}</span>
-                <span className="text-emerald-700 dark:text-emerald-400 font-bold">{g.status}</span>
+                <span className="text-emerald-700 font-bold">{g.status}</span>
               </div>
-              <h4 className="text-xs font-bold text-[#191919] dark:text-[#f4f4f6]">{g.name}</h4>
-              <span className="text-[10px] font-mono text-emerald-800 dark:text-emerald-300 block mt-1 font-semibold">
+              <h4 className="text-xs font-bold text-[#14211a]">{g.name}</h4>
+              <span className="text-[10px] font-mono text-emerald-800 block mt-1 font-semibold">
                 {g.metrics}
               </span>
-              <p className="mt-2 text-[11px] text-[#191919]/70 dark:text-neutral-300 leading-relaxed font-sans">
+              <p className="mt-2 text-[11px] text-[#67776e] leading-relaxed font-sans">
                 {g.description}
               </p>
             </div>
-            <div className="mt-3 pt-2 border-t border-gray-200/60 dark:border-[#22222a] text-[9px] font-mono text-[#191919]/50 dark:text-neutral-400 truncate">
+            <div className="mt-3 pt-2 border-t border-[#dce8e1] text-[9px] font-mono text-[#67776e] truncate">
               {g.file}
             </div>
           </div>

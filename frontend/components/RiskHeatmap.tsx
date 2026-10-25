@@ -177,13 +177,13 @@ export default function RiskHeatmap({ checkpoint }: RiskHeatmapProps) {
   const activeMonthIdx = checkpoint === "2027-03-15" ? 2 : checkpoint === "2027-06-01" ? 5 : 8;
 
   return (
-    <div className="w-full bg-white dark:bg-[#121216] border border-gray-200 dark:border-[#22222a] rounded-xl p-4 sm:p-5 shadow-2xs transition-colors duration-200 select-none">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gray-100 dark:border-[#22222a] gap-2">
+    <div className="w-full bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs select-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#dce8e1] gap-2">
         <div>
-          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#191919]/50 dark:text-neutral-400">
+          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#67776e]">
             PORTFOLIO RISK MATRIX [FR9.3]
           </span>
-          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#191919] dark:text-[#f4f4f6] mt-0.5">
+          <h3 className="text-lg sm:text-xl font-serif font-normal text-[#14211a] mt-0.5">
             Contract × Month Exposure Heatmap
           </h3>
         </div>
@@ -192,19 +192,19 @@ export default function RiskHeatmap({ checkpoint }: RiskHeatmapProps) {
         <div className="flex items-center gap-3 text-[11px] font-sans flex-wrap">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500/80" />
-            <span className="text-[#191919]/60 dark:text-neutral-400">Compliant</span>
+            <span className="text-[#67776e]">Compliant</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-sm bg-amber-500/80" />
-            <span className="text-[#191919]/60 dark:text-neutral-400">Warning</span>
+            <span className="text-[#67776e]">Warning</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-sm bg-rose-500/90" />
-            <span className="text-[#191919]/60 dark:text-neutral-400">Breach / Claim</span>
+            <span className="text-[#67776e]">Breach / Claim</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-gray-300 dark:bg-neutral-700" />
-            <span className="text-[#191919]/60 dark:text-neutral-400">Superseded</span>
+            <span className="w-2.5 h-2.5 rounded-sm bg-[#dce8e1]" />
+            <span className="text-[#67776e]">Superseded</span>
           </div>
         </div>
       </div>
@@ -214,7 +214,7 @@ export default function RiskHeatmap({ checkpoint }: RiskHeatmapProps) {
         <table className="w-full min-w-[620px] text-xs border-collapse">
           <thead>
             <tr>
-              <th className="text-left font-mono text-[11px] uppercase tracking-wider text-[#191919]/50 dark:text-neutral-500 pb-2.5 pr-3 font-medium">
+              <th className="text-left font-mono text-[11px] uppercase tracking-wider text-[#67776e] pb-2.5 pr-3 font-medium">
                 Contract
               </th>
               {MONTHS.map((m, idx) => (
@@ -222,13 +222,13 @@ export default function RiskHeatmap({ checkpoint }: RiskHeatmapProps) {
                   key={m}
                   className={`text-center font-mono text-[11px] uppercase tracking-wider pb-2.5 px-1 font-medium transition-colors ${
                     idx === activeMonthIdx
-                      ? "text-[#191919] dark:text-white font-bold bg-[#F4F3F3] dark:bg-[#181820] rounded-t"
-                      : "text-[#191919]/50 dark:text-neutral-500"
+                      ? "text-[#14211a] font-bold bg-[#f3f8f5] rounded-t border-t border-x border-[#dce8e1]"
+                      : "text-[#67776e]"
                   }`}
                 >
                   {m}
                   {idx === activeMonthIdx && (
-                    <span className="block text-[9px] text-emerald-700 dark:text-emerald-400 font-semibold lowercase">
+                    <span className="block text-[9px] text-emerald-700 font-semibold lowercase">
                       clock
                     </span>
                   )}
@@ -236,35 +236,35 @@ export default function RiskHeatmap({ checkpoint }: RiskHeatmapProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-[#202028]">
+          <tbody className="divide-y divide-[#dce8e1]">
             {HEATMAP_DATA.all.map((row) => (
-              <tr key={row.id} className="hover:bg-[#fafafa] dark:hover:bg-[#16161c] transition-colors">
+              <tr key={row.id} className="hover:bg-[#f3f8f5]/40 transition-colors">
                 <td className="py-2.5 pr-3 text-left">
-                  <span className="font-mono font-medium text-[#191919] dark:text-[#f4f4f6] block">
+                  <span className="font-mono font-medium text-[#14211a] block">
                     {row.id}
                   </span>
-                  <span className="text-[10px] text-[#191919]/50 dark:text-neutral-400 truncate max-w-[120px] block">
+                  <span className="text-[10px] text-[#67776e] truncate max-w-[120px] block">
                     {row.party}
                   </span>
                 </td>
                 {row.months.map((cell) => {
                   const isActiveCol = cell.monthIdx === activeMonthIdx;
-                  let bgClass = "bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 border-emerald-300/40";
+                  let bgClass = "bg-emerald-500/20 text-emerald-900 border-emerald-300/40";
                   if (cell.status === "warning") {
-                    bgClass = "bg-amber-500/30 text-amber-950 dark:text-amber-200 border-amber-300/60";
+                    bgClass = "bg-amber-500/30 text-amber-950 border-amber-300/60";
                   } else if (cell.status === "critical") {
-                    bgClass = "bg-rose-500/40 text-rose-950 dark:text-rose-200 border-rose-300/60 font-semibold";
+                    bgClass = "bg-rose-500/40 text-rose-950 border-rose-300/60 font-semibold";
                   } else if (cell.status === "superseded") {
-                    bgClass = "bg-gray-100 dark:bg-[#1a1a22] text-gray-400 dark:text-neutral-600 border-gray-200 dark:border-[#22222a] opacity-50";
+                    bgClass = "bg-[#f3f8f5] text-[#67776e] border-[#dce8e1] opacity-60";
                   } else if (cell.status === "pre_effective") {
-                    bgClass = "bg-blue-500/10 text-blue-900 dark:text-blue-300 border-blue-200/40 opacity-70";
+                    bgClass = "bg-blue-500/10 text-blue-900 border-blue-200/40 opacity-70";
                   }
 
                   return (
                     <td
                       key={cell.month}
                       className={`py-1.5 px-1 text-center ${
-                        isActiveCol ? "bg-[#F4F3F3]/70 dark:bg-[#181820]/70" : ""
+                        isActiveCol ? "bg-[#f3f8f5]/60" : ""
                       }`}
                     >
                       <button
@@ -285,25 +285,25 @@ export default function RiskHeatmap({ checkpoint }: RiskHeatmapProps) {
 
       {/* Selected Cell Drilldown Card */}
       {selectedCell && (
-        <div className="mt-4 p-3.5 bg-[#fafafa] dark:bg-[#16161c] border border-gray-200 dark:border-[#26262e] rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div className="mt-4 p-3.5 bg-[#f3f8f5] border border-[#dce8e1] rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono font-semibold text-xs text-[#191919] dark:text-white">
+              <span className="font-mono font-semibold text-xs text-[#14211a]">
                 {selectedCell.contract} — {selectedCell.cell.month} 2027
               </span>
               {selectedCell.cell.trapRef && (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#191919] dark:bg-white text-white dark:text-[#09090b] font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#14211a] text-white font-bold">
                   {selectedCell.cell.trapRef}
                 </span>
               )}
             </div>
-            <p className="text-xs text-[#191919]/70 dark:text-neutral-300 mt-1 font-sans">
+            <p className="text-xs text-[#67776e] mt-1 font-sans">
               {selectedCell.cell.detail}
             </p>
           </div>
           <button
             onClick={() => setSelectedCell(null)}
-            className="text-[11px] font-medium text-[#191919]/60 dark:text-neutral-400 hover:text-[#191919] dark:hover:text-white underline cursor-pointer self-end sm:self-auto"
+            className="text-[11px] font-medium text-[#67776e] hover:text-[#14211a] underline cursor-pointer self-end sm:self-auto"
           >
             Dismiss Details ✕
           </button>
