@@ -15,6 +15,7 @@ import GuardrailMonitor from "@/components/GuardrailMonitor";
 import GuardrailAuditTable from "@/components/GuardrailAuditTable";
 import CitationDrawer from "@/components/CitationDrawer";
 import NoticeModal from "@/components/NoticeModal";
+import RidgelineDitherFooter from "@/components/ui/ridgeline-dither-footer";
 import { CheckpointDate, Citation, ActionNotice } from "@/lib/types";
 
 export default function Home() {
@@ -46,7 +47,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#ffffff] dark:bg-[#09090b] text-[#191919] dark:text-[#f4f4f6] flex flex-col transition-colors duration-200 pb-20">
+    <main className="min-h-screen bg-[#ffffff] text-[#191919] flex flex-col transition-colors duration-200">
       {/* Tactical Entry Preloader */}
       <Preloader />
 
@@ -206,6 +207,52 @@ export default function Home() {
         <section aria-label="Verification Audit Event Log">
           <GuardrailAuditTable />
         </section>
+      </div>
+
+      {/* Full-width Ridgeline Dither Site Footer */}
+      <div className="w-full mt-16 border-t border-gray-200">
+        <RidgelineDitherFooter
+          name="Odin War Room"
+          tagline="Autonomous multi-agent contract intelligence and real-time legal risk arbitration for enterprise portfolios."
+          brandHref="#"
+          preset="evergreen"
+          columns={[
+            {
+              title: "War Room",
+              links: [
+                { label: "Contract Universe" },
+                { label: "Temporal Scrubber" },
+                { label: "Waterfall Analysis" },
+                { label: "Risk Heatmap", badge: "Live" },
+              ],
+            },
+            {
+              title: "Multi-Agent Arena",
+              links: [
+                { label: "Loki (Adversary)" },
+                { label: "Heimdall (Radar)" },
+                { label: "Tyr (Arbiter)" },
+                { label: "Mimir (Supervisor)" },
+              ],
+            },
+            {
+              title: "Evaluation & Traps",
+              links: [
+                { label: "The 14 Traps", badge: "14/14" },
+                { label: "Citation Guardrails" },
+                { label: "Manifest Ingestion" },
+                { label: "Quillhub Inc. Audit" },
+              ],
+            },
+          ]}
+          socials={[
+            { icon: "github", href: "https://github.com/bhave5h/TeamRaven" },
+            { icon: "x", href: "https://x.com" },
+            { icon: "linkedin", href: "https://linkedin.com" },
+          ]}
+          copyright="© 2027 Quillhub Inc. / TeamRaven. Ragnarok Hackathon 2026 Problem Statement 2."
+          credit={{ label: "Team Raven", href: "https://github.com/bhave5h/TeamRaven" }}
+        />
       </div>
 
       {/* Slide-out Citation Drawer (100% Substring Grounding) */}
