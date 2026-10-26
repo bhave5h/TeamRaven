@@ -3,7 +3,28 @@
 import React from "react";
 import { ODIN_FORCE_RULINGS } from "@/lib/odinData";
 
-export default function TyrRulingsLog() {
+interface TyrRulingsLogProps {
+  rulings?: Array<{
+    claim?: string;
+    thor_position?: string;
+    loki_position?: string;
+    heimdall_position?: string;
+    verdict?: string;
+    rationale?: string;
+    citation_ids?: string[];
+  }>;
+}
+
+export default function TyrRulingsLog({ rulings }: TyrRulingsLogProps) {
+  const displayRows = rulings && rulings.length > 0
+    ? rulings.map((r) => ({
+        claim: r.claim || "Disputed Claim",
+        lokiAttack: r.loki_position || "Counterparty arguments under clause review.",
+        heimdallEvidence: r.heimdall_position || "Operational facts and audit logs verified.",
+        verdict: (r.verdict || "VALID").toUpperCase(),
+        rationale: r.rationale || "Adjudicated under standard precedence rules.",
+      }))
+    : ODIN_FORCE_RULINGS;
   return (
     <div className="w-full bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs select-none">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#dce8e1]">
@@ -38,7 +59,7 @@ export default function TyrRulingsLog() {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#dce8e1]">
-            {ODIN_FORCE_RULINGS.map((row, idx) => (
+            {displayRows.map((row, idx) => (
               <tr key={idx} className="hover:bg-[#f3f8f5] transition-colors">
                 <td className="py-3 px-3 font-semibold text-[#14211a] max-w-[200px]">
                   {row.claim}

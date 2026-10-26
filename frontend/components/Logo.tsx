@@ -27,8 +27,8 @@ export default function Logo() {
       />
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <span className="font-sans font-bold text-lg tracking-tight text-[#14211a] lowercase">
-            odin force
+          <span className="font-sans font-bold text-lg tracking-tight text-[#14211a]">
+            Odin Force
           </span>
           <span className="text-[10px] font-mono tracking-[0.16em] uppercase px-1.5 py-0.5 bg-[#f3f8f5] border border-[#dce8e1] rounded text-[#14211a] font-semibold">
             WAR ROOM

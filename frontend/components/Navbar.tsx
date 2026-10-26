@@ -21,8 +21,8 @@ export default function Navbar({
       
           {/* 8-Pointed Starburst / Asterisk Glyph */}
         <Image src="/logo.png" alt="Odin Force Logo" width={24} height={24} />
-        <span className="font-sans font-bold text-lg tracking-tight text-[#14211a] lowercase">
-          odin force
+        <span className="font-sans font-bold text-lg tracking-tight text-[#14211a]">
+          Odin Force
         </span>
       </a>
     </header>

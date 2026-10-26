@@ -2,7 +2,13 @@
 
 import React from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import FolderComponent from "@/components/ui/folder";
+
+const Motes = dynamic(
+  () => import("@lucasmarkes/motes-react").then((mod) => mod.Motes),
+  { ssr: false }
+);
 
 interface HeroSectionProps {
   onTriggerAnalysis?: () => void;
@@ -22,6 +28,17 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
             sizes="(max-width: 1120px) 100vw, 1120px"
             className="object-cover object-[center_35%] select-none pointer-events-none"
           />
+
+          {/* Procedural pointer-reactive ASCII embers on top of hero image */}
+          <Motes
+            effect="embers"
+            pointer
+            radius={70}
+            force={1.1}
+            accent="#ddeafe"
+            background="transparent"
+            className="absolute inset-0 z-10 h-full w-full pointer-events-auto"
+          />
         </div>
       </div>
 
@@ -37,8 +54,8 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
           </div>
 
           {/* Right: Interactive Contract Folder (Beside Headline) */}
-          <div className="shrink-0 flex items-center justify-center overflow-visible">
-            <FolderComponent color="black" size="xs" />
+          <div className="shrink-0 flex items-center justify-center overflow-visible z-20">
+            <FolderComponent color="orange" size="xs" />
           </div>
         </div>
       </div>

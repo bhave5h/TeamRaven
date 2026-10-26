@@ -1,9 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import { getReportDownloadUrl } from "@/lib/api";
 
-export default function PortfolioReports() {
-  const [selectedReport, setSelectedReport] = useState<"portfolio" | "A1" | "A3" | "B1" | "B2" | "C1">("portfolio");
+interface PortfolioReportsProps {
+  dossiers?: Record<string, any>;
+  companyReportMarkdown?: string;
+  checkpoint?: string;
+}
+
+export default function PortfolioReports({ dossiers, companyReportMarkdown, checkpoint }: PortfolioReportsProps) {
+  const [selectedReport, setSelectedReport] = useState<string>("portfolio");
 
   const reportsContent: Record<string, { title: string; subtitle: string; content: string }> = {
     portfolio: {
@@ -106,7 +113,60 @@ An automated multi-agent audit of the Quillhub commercial contract portfolio was
     },
   };
 
-  const currentDoc = reportsContent[selectedReport];
+  if (companyReportMarkdown) {
+    reportsContent.portfolio.content = companyReportMarkdown;
+  }
+
+  if (dossiers && Object.keys(dossiers).length > 0) {
+    Object.entries(dossiers).forEach(([docId, dossier]) => {
+      reportsContent[docId] = {
+        title: `Contract Dossier: ${docId} (${dossier.title || docId})`,
+        subtitle: `Discovered from active upload • Verified Clauses`,
+        content: `## ${docId} · ${dossier.title || "Contract"}
+### Key Terms
+${dossier.key_terms || "No key terms excerpt available."}
+
+### Obligations in Source
+${Array.isArray(dossier.obligations) ? dossier.obligations.map((o: string) => `- ${o}`).join("\n") : "- None"}
+
+### Timeline & Deadlines
+${Array.isArray(dossier.timeline) ? dossier.timeline.map((t: string) => `- ${t}`).join("\n") : "- None"}
+
+### Risk Factors & Liability
+${Array.isArray(dossier.risks) ? dossier.risks.map((r: string) => `- ${r}`).join("\n") : "- None"}`
+      };
+    });
+  }
+
+  const currentDoc = reportsContent[selectedReport] || reportsContent.portfolio;
+
+  const handleDownload = () => {
+    try {
+      const url = getReportDownloadUrl(selectedReport === "portfolio" ? "company" : "contract", selectedReport, "md");
+      window.open(url, "_blank");
+    } catch {
+      const blob = new Blob([currentDoc.content], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${selectedReport}_report.md`;
+      a.click();
+    }
+  };
+
+  const pillItems = dossiers && Object.keys(dossiers).length > 0
+    ? [
+        { id: "portfolio", label: "Unified Portfolio Risk Report" },
+        ...Object.keys(dossiers).map((id) => ({ id, label: `${id} Dossier` })),
+      ]
+    : [
+        { id: "portfolio", label: "Unified Portfolio Risk Report" },
+        { id: "A1", label: "A1 (StratoNode Cloud)" },
+        { id: "A3", label: "A3 (SLA Amendment - Trap #1)" },
+        { id: "B1", label: "B1 (Apex Retail - Trap #2)" },
+        { id: "B2", label: "B2 (Harbor Logistics - Trap #3)" },
+        { id: "C1", label: "C1 (Vantage Health - Trap #5)" },
+      ];
 
   return (
     <div className="w-full bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs select-none">
@@ -126,14 +186,7 @@ An automated multi-agent audit of the Quillhub commercial contract portfolio was
         </div>
 
         <button
-          onClick={() => {
-            const blob = new Blob([currentDoc.content], { type: "text/markdown;charset=utf-8" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${selectedReport}_report.md`;
-            a.click();
-          }}
+          onClick={handleDownload}
           className="px-3.5 py-1.5 bg-[#14211a] text-white text-xs font-medium rounded-lg hover:bg-[#14211a]/90 active:scale-[0.98] transition-all cursor-pointer self-start sm:self-auto shadow-xs"
         >
           Download Markdown (.md) ↓
@@ -142,17 +195,10 @@ An automated multi-agent audit of the Quillhub commercial contract portfolio was
 
       {/* Report Selector Pills */}
       <div className="flex flex-wrap items-center gap-2 pt-4 pb-3">
-        {[
-          { id: "portfolio", label: "Unified Portfolio Risk Report" },
-          { id: "A1", label: "A1 (StratoNode Cloud)" },
-          { id: "A3", label: "A3 (SLA Amendment - Trap #1)" },
-          { id: "B1", label: "B1 (Apex Retail - Trap #2)" },
-          { id: "B2", label: "B2 (Harbor Logistics - Trap #3)" },
-          { id: "C1", label: "C1 (Vantage Health - Trap #5)" },
-        ].map((item) => (
+        {pillItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => setSelectedReport(item.id as typeof selectedReport)}
+            onClick={() => setSelectedReport(item.id)}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
               selectedReport === item.id
                 ? "bg-[#14211a] text-white shadow-2xs font-semibold"

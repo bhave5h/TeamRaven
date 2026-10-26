@@ -22,7 +22,7 @@ export interface RidgelinePalette {
   tones: string[]
 }
 
-export type RidgelineTheme = "evergreen" | "glacier" | "dusk" | "sepia" | "night"
+export type RidgelineTheme = "evergreen" | "glacier" | "dusk" | "sepia" | "night" | "orange"
 
 export type RidgelinePreset = "auto" | RidgelineTheme
 
@@ -67,7 +67,7 @@ export interface RidgelineDitherFooterProps {
   /** Colours. "auto" is evergreen, or night under a .dark ancestor. */
   preset?: RidgelinePreset
   /** Colour overrides, merged over the preset. */
-  palette?: { paper?: string; ink?: string; muted?: string; line?: string; heart?: string; tones?: string[] }
+  palette?: { paper?: string; ink?: string; muted?: string; line?: string; heart?: string; accent?: string; tones?: string[] }
   /** Which range to generate. Any integer. */
   seed?: number
   /** How many ridges recede into the mist, 2–9. Defaults to 6. */
@@ -130,6 +130,14 @@ const PRESETS: RidgelinePresetMap = {
     line: "#e9dfcf",
     heart: "#d6452f",
     tones: ["#f7f2ea", "#efdfc6", "#ddbb8d", "#bb8a55", "#8a5a2e", "#5a3518", "#2f1a0b"],
+  },
+  orange: {
+    paper: "#fffaf6",
+    ink: "#1c140e",
+    muted: "#7d6b5e",
+    line: "#f5e4d5",
+    heart: "#ea580c",
+    tones: ["#fffaf6", "#ffedd5", "#fed7aa", "#fb923c", "#f97316", "#ea580c", "#9a3412"],
   },
   night: {
     paper: "#08100c",
@@ -803,7 +811,7 @@ export default function RidgelineDitherFooter({
           "--rdf-line": colors.line,
           "--rdf-heart": colors.heart,
           "--rdf-deep": deep,
-          "--rdf-accent": tones[Math.max(1, tones.length - 3)],
+          "--rdf-accent": palette?.accent ?? tones[Math.max(1, tones.length - 3)],
           "--rdf-n": columns.length,
           "--rdf-max": maxWidth,
           "--rdf-sans": fontFamily,

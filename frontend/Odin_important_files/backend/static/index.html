@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Odin: Contract War Room</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f3f1ec;--pn:#fff;--ln:#d9d4c8;--tx:#1d2330;--mu:#6a7080;--gold:#9a7424;--red:#c0392b;--amb:#b97a0c;--blu:#2f6fb0;--grn:#2e8b57;--vi:#7a4fb0;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161d;--pn:#1b212b;--ln:#2d3543;--tx:#e8e4d8;--mu:#8e96a6;--gold:#d3ad5e;--red:#ee6b5c;--amb:#e8ac3c;--blu:#6aaee8;--grn:#62bb86;--vi:#a98ae0;color-scheme:dark}}
+*{box-sizing:border-box}html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0;font-weight:600}
+h2{font-size:16px;margin-bottom:8px}
+button,select,input{font:inherit;color:inherit;background:var(--pn);border:1px solid var(--ln);border-radius:4px;padding:5px 9px}
+button{cursor:pointer}button:hover{border-color:var(--gold)}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--blu);outline-offset:1px}
+button.pri{background:var(--gold);color:#fff;border-color:var(--gold);font-weight:600}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--pn);border-bottom:2px solid var(--gold);padding:8px 14px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+header h1{font-size:18px;margin-right:6px}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-block;padding:1px 8px;border-radius:10px;border:1px solid var(--ln);font-size:12px;white-space:nowrap}
+.st-idle{color:var(--mu)}.st-running{color:var(--blu);border-color:var(--blu)}.st-partial{color:var(--amb);border-color:var(--amb)}.st-done{color:var(--grn);border-color:var(--grn)}
+nav{display:flex;gap:2px;padding:0 14px;border-bottom:1px solid var(--ln);background:var(--pn);overflow-x:auto}
+nav button{border:0;border-bottom:3px solid transparent;border-radius:0;padding:9px 12px;background:none;white-space:nowrap}
+nav button.on{border-bottom-color:var(--gold);font-weight:600}
+main{padding:14px;max-width:1400px;margin:auto}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(12,1fr)}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:6px;padding:12px;min-width:0}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c7{grid-column:span 7}.c6{grid-column:span 6}.c5{grid-column:span 5}.c4{grid-column:span 4}
+@media(max-width:900px){.c8,.c7,.c6,.c5,.c4{grid-column:span 12}}
+.slider{padding:10px 16px}.slider input{width:100%;accent-color:var(--gold);padding:0}
+.ticks{display:flex;justify-content:space-between;color:var(--mu);font-size:12px}
+.big{font:600 44px/1 Georgia,serif}
+.neg{color:var(--red)}.pos{color:var(--grn)}.mu{color:var(--mu)}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--ln);vertical-align:top}
+.scroll{overflow-x:auto}
+.cite{cursor:pointer;color:var(--blu);border:1px solid var(--blu);border-radius:3px;padding:0 5px;font-size:12px;background:none}
+.alert{border-left:4px solid var(--ln);padding:6px 10px;margin-bottom:8px;background:var(--bg);border-radius:0 4px 4px 0}
+.alert.critical{border-color:var(--red)}.alert.warning{border-color:var(--amb)}.alert.info{border-color:var(--blu)}
+.turn{padding:7px 10px;margin-bottom:7px;border-radius:4px;border-left:4px solid}
+.turn.Loki{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,transparent)}
+.turn.Heimdall{border-color:var(--blu);background:color-mix(in srgb,var(--blu) 8%,transparent)}
+.turn.Tyr{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.hm{display:grid;grid-template-columns:84px repeat(7,1fr);gap:3px;font-size:12px}
+.hm div{padding:5px 0;text-align:center;border-radius:3px}
+.s0{background:var(--bg)}.s1{background:color-mix(in srgb,var(--blu) 30%,transparent)}.s2{background:color-mix(in srgb,var(--amb) 45%,transparent)}.s3{background:color-mix(in srgb,var(--red) 60%,transparent)}.sf{opacity:.25}
+#drawer{position:fixed;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--pn);border-left:2px solid var(--gold);padding:16px;transform:translateX(105%);transition:transform .2s;z-index:10;overflow:auto}
+#drawer.open{transform:none}
+mark{background:color-mix(in srgb,var(--gold) 40%,transparent);color:inherit;padding:0 2px}
+.stamp{display:inline-block;border:2px solid;padding:1px 8px;font-weight:700;transform:rotate(-3deg);border-radius:3px}
+.ok{color:var(--grn)}.bad{color:var(--red)}
+.warnbox{background:color-mix(in srgb,var(--red) 12%,transparent);border:1px solid var(--red);padding:4px 8px;border-radius:4px;margin:6px 0}
+.draft{border:1px solid var(--ln);border-radius:6px;padding:10px;margin-bottom:10px}
+.draft pre{white-space:pre-wrap;background:var(--bg);padding:8px;border-radius:4px;font:12px/1.4 ui-monospace,monospace;margin:6px 0}
+.bar{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;min-width:60px}.bar i{display:block;height:100%;background:var(--blu);transition:width .3s}
+.hide{display:none}
+button:disabled{opacity:.4;cursor:not-allowed;border-color:var(--ln)}
+button:disabled:hover{border-color:var(--ln)}
+#empty-state{text-align:center;padding:50px 24px;margin:30px auto;max-width:760px;border:2px dashed var(--ln);border-radius:8px;background:var(--pn)}
+#empty-state h2{font-size:22px;margin-bottom:12px;color:var(--gold)}
+#empty-state p{color:var(--mu);font-size:14px;line-height:1.6;margin:0 0 12px 0}
+#ask-answer{white-space:pre-wrap;margin-top:10px}.ask-sources{margin-top:8px}.ask-form{display:flex;gap:8px;align-items:flex-start}.ask-form textarea{flex:1;min-height:42px;resize:vertical}
+</style></head><body>
+<header>
+ <h1>Odin · Contract War Room</h1>
+ <div class="grp"><input id="bpath" placeholder="Data folder path" size="22" aria-label="Data folder path"><span class="mu">or</span>
+  <input id="zipf" type="file" accept=".zip" aria-label="Upload zip file" style="max-width:190px"><button class="pri" id="run-btn" onclick="run()">Run decision</button><button onclick="resetWarRoom()" title="Clear the active upload and results" style="font-size:12px;padding:4px 7px">Reset</button></div>
+ <div class="grp"><select id="bud" aria-label="Budget"><option value="full">Full budget</option></select><span id="streams" class="grp"></span></div>
+ <div class="grp hide" id="dataset-controls"><b id="cdate">—</b><select id="drop" aria-label="Drop"><option value="drop1">Drop 1</option><option value="drop2">Drop 2</option></select></div><span id="status" class="chip st-idle">idle</span>
+</header>
+<nav id="tabs" class="hide"></nav>
+<main>
+
+ <div id="empty-state">
+  <h2>Contract War Room Awaiting Ingestion</h2>
+  <p>No data is loaded. Choose a data folder or <code>.zip</code> file, then click <b>Run decision</b>.</p>
+  <p style="font-size:13px">Results appear only after the selected upload has been analyzed.</p>
+ </div>
+<section id="p-war" class="grid hide">
+ <div id="ask-panel" class="card c12"><h2>Ask about your uploaded data</h2><form id="ask-form" class="ask-form"><textarea id="ask-question" placeholder="Ask about a contract clause, event, payment, or ledger total" required minlength="3" maxlength="1200"></textarea><button class="pri" id="ask-button" type="submit">Ask query</button></form><div id="ask-answer" aria-live="polite" class="mu"></div><div id="ask-sources" class="ask-sources"></div></div>
+ <div class="card c12 slider"><h2>Time slider</h2><input id="sl" type="range" min="0" max="0" step="1" value="0" aria-label="Checkpoint"><div class="ticks"></div></div>
+ <div class="card c12"><h2>Work plan</h2><div class="scroll"><table id="plan"></table></div></div>
+ <div class="card c5"><h2>Uploaded data metrics</h2><div class="mu">Recorded ledger amount through <span class="dt"></span></div><div class="big" id="tot"></div><div id="wf" style="margin-top:12px"></div></div>
+ <div class="card c7"><h2>Uploaded contract relationships</h2><svg id="graph" viewBox="0 0 600 320" width="100%" role="img" aria-label="Uploaded contract relationships"></svg>
+  <div class="mu" style="font-size:12px">Contracts and precedence relationships indexed from the active upload.</div></div>
+ <div class="card c5"><div class="grp" style="justify-content:space-between"><h2>Risk heatmap</h2><select id="hmv" onchange="render()" aria-label="Heatmap rows"><option value="contract">By contract</option><option value="type">By clause type</option></select></div><div id="hm" class="hm"></div></div>
+ <div class="card c7"><h2>Alerts</h2><div class="grp" style="margin-bottom:8px"><select id="fc"><option value="">All contracts</option></select><select id="fs"><option value="">All severities</option><option>critical</option><option>warning</option><option>info</option></select></div><div id="alerts"></div></div>
+ <div class="card c6"><div class="grp" style="justify-content:space-between"><h2>Agent debate</h2><button onclick="replay()">Replay</button></div><div id="debate"></div></div>
+ <div class="card c6"><h2>Action panel</h2><div id="actions"></div></div>
+</section>
+
+<section id="p-ext" class="hide card"><h2>Extraction (Thor)</h2><div class="scroll"><table id="ext"></table></div></section>
+<section id="p-rul" class="hide card"><h2>Rulings log</h2><div class="scroll"><table id="rul"></table></div></section>
+<section id="p-grd" class="hide grid">
+ <div class="card c6"><h2>Guardrails</h2><div id="grd"></div></div>
+ <div class="card c6"><h2>Trap scoreboard</h2><div id="traps"></div></div>
+ <div class="card c12"><h2>Agent transitions</h2><div id="trans" class="mu"></div></div>
+</section>
+<section id="p-rep" class="hide grid">
+ <div class="card c12"><div class="grp" style="justify-content:space-between"><h2>Company risk report</h2><button onclick="toast('Report downloaded')">Download</button></div>
+  <p>Recorded uploaded ledger amount through the selected date: <b id="rtot"></b>.</p>
+  <h3>Uploaded contract precedence relationships</h3><div class="scroll"><table id="conf"></table></div></div>
+ <div class="card c12"><h2>Uploaded events and milestones</h2><div class="scroll"><table id="wc"></table></div></div>
+ <div class="card c12"><h2>References (clause text)</h2><div id="refs"></div></div>
+ <div class="card c6"><h2>Prioritized actions</h2><ol id="prio"></ol></div>
+ <div class="card c6"><h2>Per-contract dossiers</h2><div id="dos"></div></div>
+</section>
+</main>
+<aside id="drawer" aria-label="Citation drawer"><button onclick="drawer.classList.remove('open')" style="float:right">Close</button><div id="dbody"></div></aside>
+<div id="toast" class="chip" style="position:fixed;left:14px;bottom:14px;background:var(--pn);display:none"></div>
+<script>
+const $ = id => document.getElementById(id);
+const drawer = $("drawer");
+const tabs = [["war", "War Room"], ["ext", "Extraction"], ["rul", "Rulings"], ["grd", "Guardrails & traps"], ["rep", "Reports"]];
+
+let isIngested = false;
+let isAnalyzed = false;
+let d = 0; // Current checkpoint index
+let checkpoints = [];
+let contracts = [];
+let currentDrop = "drop1";
+let stat = {};
+let fin = "";
+let ack = {};
+let currentState = null;
+let citationsCache = {};
+let extractionsData = [];
+let rulingsData = [];
+let guardrailsData = null;
+let trapsData = [];
+let dossiersData = {};
+let debateTurns = [];
+let rt = [];
+
+const fmtCents = c => c === null || c === undefined ? "not stated in upload" : (Number(c) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = n => n === null || n === undefined ? "not stated in upload" : Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+function toast(m) {
+  const e = $("toast");
+  e.textContent = m;
+  e.style.display = "block";
+  setTimeout(() => e.style.display = "none", 2500);
+}
+
+function lockDashboard(clearInputs = false) {
+  isIngested = false;
+  isAnalyzed = false;
+  d = 0; checkpoints = []; contracts = []; stat = {}; fin = ""; ack = {};
+  currentState = null; citationsCache = {}; extractionsData = []; rulingsData = [];
+  guardrailsData = null; trapsData = []; dossiersData = {}; debateTurns = [];
+  rt.forEach(clearTimeout); rt = [];
+  $("empty-state").classList.remove("hide");
+  $("tabs").classList.add("hide");
+  tabs.forEach(t => $("p-" + t[0]).classList.add("hide"));
+  $("run-btn").disabled = false;
+  $("cdate").textContent = "—";
+  $("streams").replaceChildren();
+  $("sl").min = 0; $("sl").max = 0; $("sl").value = 0;
+  const ticks = document.querySelector(".ticks"); if (ticks) ticks.replaceChildren();
+  $("drop").innerHTML = '<option value="drop1">Drop 1</option><option value="drop2">Drop 2</option>';
+  currentDrop = "drop1";
+  $("fc").innerHTML = '<option value="">All contracts</option>';
+  ["tot", "wf", "graph", "hm", "alerts", "debate", "actions", "plan", "ext", "rul", "grd", "traps", "trans", "conf", "wc", "refs", "prio", "dos", "rtot"].forEach(id => $(id)?.replaceChildren());
+  $("ask-question").value = ""; $("ask-answer").textContent = ""; $("ask-sources").replaceChildren();
+  drawer.classList.remove("open");
+  if (clearInputs) { $("bpath").value = ""; $("zipf").value = ""; }
+  setStatus("idle");
+}
+
+function unlockDashboard() {
+  isIngested = true;
+  isAnalyzed = true;
+  $("empty-state").classList.add("hide");
+  $("tabs").classList.remove("hide");
+  $("run-btn").disabled = false;
+  renderStreams();
+  renderPlan();
+  tab("war");
+}
+async function resetWarRoom() {
+  try { await fetch("/api/reset", { method: "POST" }); } catch (e) {}
+  checkpoints = []; contracts = []; currentState = null; citationsCache = {};
+  $("bpath").value = ""; $("zipf").value = ""; $("ask-answer").textContent = ""; $("ask-sources").replaceChildren();
+  lockDashboard();
+  toast("War Room reset to initial empty state.");
+}
+
+function tab(k) {
+  tabs.forEach(t => {
+    $("p-" + t[0]).classList.toggle("hide", t[0] != k);
+  });
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t == k));
+}
+
+function setStatus(s, customMsg) {
+  const e = $("status");
+  e.textContent = customMsg || s;
+  e.className = "chip st-" + (s === "idle" ? "idle" : s === "running" ? "running" : s === "complete" ? "done" : s === "error" ? "error" : "partial");
+  e.style.borderColor = s === "error" ? "var(--red)" : "";
+  e.style.color = s === "error" ? "var(--red)" : "";
+}
+async function askQuestion(event) {
+  event.preventDefault();
+  const question = $("ask-question").value.trim();
+  if (!question || !isIngested) return;
+  const button = $("ask-button");
+  button.disabled = true;
+  $("ask-answer").textContent = "Searching your uploaded records…";
+  $("ask-sources").replaceChildren();
+  try {
+    const response = await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Could not answer from the uploaded data.");
+    $("ask-answer").textContent = data.answer;
+    const list = document.createElement("ul");
+    for (const source of data.sources || []) {
+      const item = document.createElement("li");
+      item.append(document.createTextNode(source.label || source.type));
+      if (source.citation_id) {
+        const link = document.createElement("button");
+        link.className = "cite";
+        link.textContent = "Open source";
+        link.addEventListener("click", () => openCite(source.citation_id));
+        item.append(" ", link);
+      }
+      list.append(item);
+    }
+    if (list.childElementCount) $("ask-sources").append(list);
+  } catch (error) {
+    $("ask-answer").textContent = error.message || "Could not answer from the uploaded data.";
+  } finally {
+    button.disabled = false;
+  }
+}
+
+const cite = k => {
+  if (!k) return "";
+  const key = String(k);
+  const c = citationsCache[key];
+  const label = c ? `${c.doc_id} ${(c.section || "").split(" ")[0]}` : key;
+  return `<button class="cite" data-citation="${encodeURIComponent(key)}">${esc(label)}</button>`;
+};
+
+async function openCite(k) {
+  let c = citationsCache[k];
+  if (!c) {
+    try {
+      const res = await fetch(`/api/citations/${k}`);
+      if (res.ok) {
+        c = await res.json();
+        citationsCache[k] = c;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  if (!c) {
+    toast(`Citation ${k} not found.`);
+    return;
+  }
+  const isOk = c.verified;
+  const quote = c.quote || "";
+  const clauseText = c.clause_text || "";
+  const highlighted = isOk ? clauseText.replace(quote, "<mark>" + quote + "</mark>") : clauseText;
+  
+  $("dbody").innerHTML = `
+    <h3>${c.doc_id || ""} · ${c.section || ""}</h3>
+    <p>${highlighted}</p>
+    <p><span class="stamp ${isOk ? "ok" : "bad"}">${isOk ? "VERIFIED" : "REJECTED"}</span> <span class="mu">substring check</span></p>
+    <p>Claim quote: <i>"${quote}"</i></p>
+    <p><span class="chip">${c.tag || "sourced"}</span> <span class="chip">confidence ${c.confidence == null ? "not provided" : `${Math.round(c.confidence * 100)}%`}</span></p>
+    ${isOk ? "" : '<p class="bad">Quote not found in the clause text. Claim rejected.</p>'}
+  `;
+  drawer.classList.add("open");
+}
+
+function renderStreams() {
+  if (!contracts.length || !isIngested) { $("streams").innerHTML = ""; return; }
+  $("streams").innerHTML = contracts.map(id => {
+    const p = Math.round(stat[id] || 0);
+    return `<span class="chip" title="${id}">${id} <span class="bar" style="display:inline-block;width:34px;vertical-align:middle"><i style="width:${p}%"></i></span></span>`;
+  }).join("");
+}
+
+function renderPlan() {
+  if (!contracts.length || !isIngested) { $("plan").innerHTML = ""; return; }
+  $("plan").innerHTML = "<tr><th>Contract</th><th>Indexed source</th><th>Status</th></tr>" + contracts.map(id => {
+    const p = Math.round(stat[id] || 0);
+    const status = p >= 100 ? "indexed" : isAnalyzed ? "analyzed" : "ready";
+    return `<tr><td><b>${id}</b></td><td class="mu">Uploaded contract and clauses</td><td><span class="chip st-${p >= 100 ? "done" : "idle"}">${status}</span></td></tr>`;
+  }).join("");
+}
+
+async function run() {
+  const zip = $("zipf").files[0];
+  const path = $("bpath").value.trim();
+  if (!zip && !path) { toast("Choose a data folder or .zip file before running a decision."); return; }
+
+  lockDashboard(false);
+  setStatus("running");
+  $("run-btn").disabled = true;
+  toast("Clearing prior results and loading the selected upload…");
+  try {
+    const resetResponse = await fetch("/api/reset", { method: "POST" });
+    if (!resetResponse.ok) throw new Error("Could not clear the previous session.");
+
+    let ingestResponse;
+    if (zip) {
+      const formData = new FormData();
+      formData.append("zipf", zip);
+      ingestResponse = await fetch("/api/ingest", { method: "POST", body: formData });
+    } else {
+      ingestResponse = await fetch("/api/ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path })
+      });
+    }
+    const ingestData = await ingestResponse.json();
+    if (!ingestResponse.ok || !ingestData.ok) throw new Error(ingestData.message || "Failed to load the selected data.");
+
+    checkpoints = Array.isArray(ingestData.checkpoints) ? ingestData.checkpoints : [];
+    contracts = Array.isArray(ingestData.contracts) ? ingestData.contracts.map(c => c.id || c) : [];
+    if (!checkpoints.length || !contracts.length) throw new Error("The selected upload has no usable checkpoints or contracts.");
+    const sl = $("sl");
+    sl.min = 0; sl.max = checkpoints.length - 1; sl.value = 0; d = 0;
+    const ticks = document.querySelector(".ticks");
+    if (ticks) ticks.innerHTML = checkpoints.map(cp => `<span>${esc(cp.label)}</span>`).join("");
+    $("fc").innerHTML = '<option value="">All contracts</option>' + contracts.map(c => `<option>${esc(c)}</option>`).join("");
+    if (Array.isArray(ingestData.drops) && ingestData.drops.length) {
+      $("drop").innerHTML = ingestData.drops.map(dr => `<option value="${esc(dr.id)}">${esc(dr.label)}</option>`).join("");
+      currentDrop = ingestData.drops[0].id;
+    }
+    isIngested = true;
+    toast("Upload indexed. Running the decision analysis…");
+
+    const analysisResponse = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ budget: $("bud").value })
+    });
+    const analysisData = await analysisResponse.json();
+    if (!analysisResponse.ok || !analysisData.ok) throw new Error(analysisData.detail || analysisData.message || "Analysis failed.");
+
+    isAnalyzed = true;
+    stat = Object.fromEntries(contracts.map(id => [id, 100]));
+    const partial = analysisData.status === "partial";
+    setStatus(partial ? "partial" : "complete", partial ? "Source-only results" : undefined);
+    unlockDashboard();
+    await fetchState();
+    await fetchTabsData();
+    replay();
+    toast(analysisData.message || "Decision completed using the selected upload.");
+  } catch (err) {
+    lockDashboard(false);
+    setStatus("error", "Decision failed");
+    toast(err.message || "Decision failed. Check the backend log.");
+  } finally {
+    $("run-btn").disabled = false;
+  }
+}
+async function fetchState() {
+  if (!isIngested) return;
+  const cp = checkpoints[d] ? checkpoints[d].id : d;
+  try {
+    const res = await fetch(`/api/state?checkpoint=${cp}&drop=${currentDrop}`);
+    if (res.ok) {
+      currentState = await res.json();
+      if (currentState.ingested === false) {
+        lockDashboard();
+        return;
+      }
+      if (currentState.checkpoints && currentState.checkpoints.length) {
+        checkpoints = currentState.checkpoints;
+        const sl = $("sl");
+        if (sl && sl.max != checkpoints.length - 1) {
+          sl.min = 0;
+          sl.max = checkpoints.length - 1;
+        }
+        const ticks = document.querySelector(".ticks");
+        if (ticks) {
+          ticks.innerHTML = checkpoints.map(c => `<span>${c.label}</span>`).join("");
+        }
+      }
+      if (currentState.contracts && currentState.contracts.length) {
+        contracts = currentState.contracts;
+        const fc = $("fc");
+        if (fc && fc.children.length <= 1) {
+          fc.innerHTML = '<option value="">All contracts</option>' + contracts.map(c => `<option>${c}</option>`).join("");
+        }
+      }
+      renderStreams();
+      renderPlan();
+      render();
+    }
+  } catch (err) {
+    console.error("fetchState error:", err);
+  }
+}
+
+function render() {
+  if (!currentState || !isIngested) return;
+  const curLabel = currentState.checkpoint_label || "—";
+  $("cdate").textContent = curLabel;
+  document.querySelectorAll(".dt").forEach(e => e.textContent = curLabel);
+
+  const summary = currentState.summary || {};
+  const total = summary.transaction_total_cents;
+  $("tot").textContent = total == null ? "No amount reported" : fmtCents(total);
+  $("tot").className = "big";
+  $("rtot").textContent = total == null ? "No amount reported" : fmtCents(total);
+  $("wf").innerHTML = [
+    ["Contracts", summary.contract_count], ["Clauses indexed", summary.clause_count],
+    ["Uploaded events", summary.event_count], ["Ledger transactions", summary.transaction_count],
+    ["Flagged ledger rows", summary.flagged_transaction_count]
+  ].map(([label, value]) => `<p><b>${label}:</b> ${value ?? "—"}</p>`).join("");
+
+  const heatmap = currentState.heatmap || {};
+  const months = heatmap.months || [];
+  const rows = $("hmv").value === "type" ? (heatmap.by_clause_type || {}) : (heatmap.by_contract || {});
+  const hm = $("hm");
+  hm.style.gridTemplateColumns = `84px repeat(${Math.max(months.length, 1)}, minmax(28px, 1fr))`;
+  hm.innerHTML = months.length ? "<div></div>" + months.map(m => `<div class="mu">${m}</div>`).join("") +
+    Object.entries(rows).map(([name, values]) => `<div class="mu">${name}</div>` + values.map((v, i) => {
+      const future = currentState.checkpoint_date && months[i] > currentState.checkpoint_date.slice(0, 7);
+      return `<div class="s${Math.min(3, Number(v) || 0)} ${future ? "sf" : ""}" title="${name} ${months[i]}: ${v}">${future ? "" : (v || "")}</div>`;
+    }).join("")).join("") : '<p class="mu">No dated events in this upload.</p>';
+
+  const graph = currentState.graph || {};
+  const nodes = graph.nodes || [];
+  const edges = graph.edges || [];
+  const hot = new Set((currentState.alerts || []).filter(a => a.severity !== "info" && a.contract_id).map(a => a.contract_id));
+  $("graph").setAttribute("viewBox", `0 0 ${graph.width || 600} ${graph.height || 320}`);
+  $("graph").innerHTML = edges.map(edge => {
+    const from = nodes.find(n => n.id === edge.from), to = nodes.find(n => n.id === edge.to);
+    if (!from || !to) return "";
+    const color = edge.kind === "amends" ? "var(--blu)" : "var(--mu)";
+    return `<g><line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="${color}" stroke-width="2" ${edge.kind === "amends" ? 'stroke-dasharray="6 4"' : ""}/><text x="${(from.x + to.x) / 2}" y="${(from.y + to.y) / 2 - 5}" font-size="9" fill="${color}" text-anchor="middle">${edge.kind}</text></g>`;
+  }).join("") + nodes.map(node => `<g${node.citation_id ? ` style="cursor:pointer" onclick="openCite('${node.citation_id}')"` : ""}><rect x="${node.x - 47}" y="${node.y - 17}" width="94" height="34" rx="5" fill="var(--pn)" stroke="${hot.has(node.contract_id) ? "var(--red)" : "var(--ln)"}" stroke-width="${hot.has(node.contract_id) ? 2.5 : 1.5}"/><text x="${node.x}" y="${node.y + 4}" font-size="10" text-anchor="middle" fill="var(--tx)">${node.label}</text></g>`).join("");
+
+  const contractFilter = $("fc").value, severityFilter = $("fs").value;
+  const order = { critical: 0, warning: 1, info: 2 };
+  const alerts = (currentState.alerts || []).filter(a => (!contractFilter || a.contract_id === contractFilter) && (!severityFilter || a.severity === severityFilter)).sort((a, b) => (order[a.severity] ?? 3) - (order[b.severity] ?? 3));
+  $("alerts").innerHTML = alerts.map(alert => `<div class="alert ${alert.severity}"><span class="chip">${alert.severity}</span> <b>${alert.title}</b><br><span class="mu">${alert.contract_id || "Unmapped contract"} · deadline ${alert.deadline || "not stated"} · amount ${alert.impact_cents == null ? "not stated" : fmtCents(alert.impact_cents)}</span> ${cite(alert.citation_id)}</div>`).join("") || '<p class="mu">No matching alert records in the uploaded events.</p>';
+
+  const drafts = currentState.drafts || [];
+  $("actions").innerHTML = drafts.map((action, i) => {
+    const internal = action.type === "evidence_review";
+    const label = internal ? `Internal review · ${esc(action.status)}` : esc(action.status);
+    const recipient = internal ? "Internal task · no external recipient" : `To: ${esc(action.recipient || "not stated")}`;
+    const controls = internal
+      ? `<button onclick="pv(${i},0)">Details</button><button onclick="pv(${i},1)">Edit</button><button onclick="patchDraft('${action.id}','completed',${i})">Mark reviewed</button>`
+      : `<button onclick="pv(${i},0)">Preview</button><button onclick="pv(${i},1)">Edit</button><button onclick="patchDraft('${action.id}','approved',${i})">Approve</button><button onclick="patchDraft('${action.id}','rejected',${i})">Reject</button><button onclick="exportDraft('${action.id}','md')">Export</button>`;
+    return `<div class="draft"><b>${esc(action.title)}</b> <span class="chip">${label}</span>${action.needs_human_approval ? '<span class="chip st-partial">Needs human review</span>' : ""}<div class="mu">${recipient}</div><pre id="pv${i}" class="hide">${esc(action.body || "")}</pre><div class="grp">${controls}</div></div>`;
+  }).join("") || '<p class="mu">No source-backed actions are indicated by this upload.</p>';
+
+  $("conf").innerHTML = "<tr><th>Source contract</th><th>Relationship</th><th>Related contract</th><th>Source</th></tr>" + (edges.map(edge => `<tr><td>${edge.from}</td><td>${edge.kind}: ${edge.label || ""}</td><td>${edge.to}</td><td>${cite(edge.citation_id)}</td></tr>`).join("") || '<tr><td colspan="4" class="mu">No precedence relationships were indexed.</td></tr>');
+  $("prio").innerHTML = alerts.map(alert => `<li><b>${alert.title}</b> · ${alert.deadline || "no deadline stated"} · amount ${alert.impact_cents == null ? "not stated" : fmtCents(alert.impact_cents)}</li>`).join("") || '<li class="mu">No alert records in the uploaded data.</li>';
+
+  const timeline = currentState.timeline || [];
+  $("wc").innerHTML = "<tr><th>Date</th><th>Uploaded event or milestone</th><th>Recorded status</th><th>Amount stated in source</th><th>Source</th></tr>" + (timeline.map(item => {
+    const date = item.date || item.target_date || "—";
+    const title = item.event || item.title || "Uploaded record";
+    const status = item.status || (item.completed ? "recorded" : "upcoming");
+    const amount = item.amount_cents == null ? "Not stated" : fmtCents(item.amount_cents);
+    return `<tr><td>${date}</td><td>${title}</td><td><span class="chip">${status}</span></td><td>${amount}</td><td>${cite(item.citation_id)}</td></tr>`;
+  }).join("") || '<tr><td colspan="5" class="mu">No event or milestone records in this upload.</td></tr>');
+  $("refs").innerHTML = Object.entries(citationsCache).map(([key, citation]) => `<p>${cite(key)} ${citation.clause_text || ""}</p>`).join("");
+}
+
+function pv(i, e) {
+  const p = $("pv" + i);
+  p.classList.toggle("hide", false);
+  p.contentEditable = e ? "true" : "false";
+  if (e) p.focus();
+}
+
+async function patchDraft(id, status, idx) {
+  try {
+    const bodyElem = $("pv" + idx);
+    const bodyText = bodyElem ? bodyElem.innerText : null;
+    await fetch(`/api/drafts/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: status, body: bodyText })
+    });
+    ack[id] = status;
+    toast(`Draft ${status}.`);
+    render();
+  } catch (err) {
+    toast(`Failed to update draft: ${err}`);
+  }
+}
+
+function exportDraft(id, format) {
+  window.open(`/api/drafts/${id}/export?format=${format}`, "_blank");
+}
+
+function replay() {
+  rt.forEach(clearTimeout);
+  $("debate").replaceChildren();
+  fetch(`/api/debate?checkpoint=${encodeURIComponent(d)}`).then(response => response.json()).then(turns => {
+    debateTurns = turns;
+    if (!turns.length) { $("debate").innerHTML = '<p class="mu">No source-grounded debate turns are stored for this upload.</p>'; return; }
+    rt = debateTurns.map((turn, index) => setTimeout(() => {
+      const row = document.createElement("div");
+      row.className = `turn ${esc(turn.agent || turn.speaker)}`;
+      row.innerHTML = `<b>${esc(turn.agent || turn.speaker)}</b> <span class="chip">round ${esc(turn.round || turn.round_number)}</span> ${cite(turn.citation_id)}<br>${esc(turn.text || turn.content)}`;
+      $("debate").append(row);
+    }, index * 400));
+  }).catch(error => { console.error(error); $("debate").textContent = "Could not load the uploaded analysis records."; });
+}
+
+async function fetchTabsData() {
+  try {
+    const response = await fetch("/api/extractions");
+    if (response.ok) {
+      extractionsData = await response.json();
+      $("ext").innerHTML = "<tr><th>Contract</th><th>Field</th><th>Source-backed detail</th><th>Confidence</th><th>Citation</th><th>Flag</th></tr>" + (extractionsData.map(row => `<tr><td>${esc(row.contract_id)}</td><td>${esc(row.field)}</td><td>${esc(row.value)}</td><td>${esc(row.confidence_label || "not estimated")}</td><td>${cite(row.citation_id)}</td><td>${row.flag ? `<span class="chip st-partial">${esc(row.flag_reason || row.flag)}</span>` : ""}</td></tr>`).join("") || '<tr><td colspan="6" class="mu">No source-grounded extractions are available.</td></tr>');
+    }
+  } catch (error) { console.error("Could not load extractions", error); }
+
+  try {
+    const response = await fetch("/api/rulings");
+    if (response.ok) {
+      rulingsData = await response.json();
+      $("rul").innerHTML = "<tr><th>Issue</th><th>Uploaded arguments</th><th>Ruling</th><th>Rationale</th><th>Sources</th></tr>" + (rulingsData.map(row => `<tr><td>${esc(row.claim)}</td><td>${esc([row.thor_position, row.loki_position, row.heimdall_position].filter(Boolean).join("\n\n") || "No agent argument was recorded; see the rationale and citations for the uploaded evidence.")}</td><td>${esc(row.verdict)}</td><td>${esc(row.rationale)}</td><td>${(row.citation_ids || []).map(cite).join(" ")}</td></tr>`).join("") || '<tr><td colspan="5" class="mu">No source-verified rulings are stored for this upload.</td></tr>');
+    }
+  } catch (error) { console.error("Could not load rulings", error); }
+
+  try {
+    const response = await fetch("/api/guardrails");
+    if (response.ok) {
+      guardrailsData = await response.json();
+      const quarantined = guardrailsData.quarantined || [];
+      const overrides = guardrailsData.overrides || [];
+      const limits = guardrailsData.limits || {};
+      const shown = value => value === null || value === undefined ? "not tracked" : esc(value);
+      $("grd").innerHTML = `<p>Citations verified: <b class="ok">${shown(guardrailsData.verified_count)}</b> · rejected: <b class="bad">${shown(guardrailsData.rejected_count)}</b></p><h3>Quarantined uploaded inputs</h3><div class="scroll"><table>${quarantined.map(row => `<tr><td>${esc(row.source)}</td><td><code>${esc(row.raw)}</code></td><td>${esc(row.reason)}</td></tr>`).join("") || '<tr><td class="mu">No quarantined input rows.</td></tr>'}</table></div><h3 style="margin-top:10px">Recorded arithmetic overrides</h3><div class="scroll"><table>${overrides.map(row => `<tr><td>${esc(row.label)}</td><td class="bad">${esc(row.llm)}</td><td class="ok">${esc(row.python)}</td></tr>`).join("") || '<tr><td class="mu">No arithmetic overrides recorded.</td></tr>'}</table></div><h3 style="margin-top:10px">Analysis limits and usage</h3><p>Debate rounds: ${shown(limits.debate_rounds)} / ${shown(limits.debate_rounds_max)} · LLM calls recorded: ${shown(limits.llm_calls)} · Tokens recorded: ${shown(limits.tokens)} · Clarifications: ${shown(limits.clarifications)}</p>`;
+    }
+  } catch (error) { console.error("Could not load guardrails", error); }
+
+  try {
+    const response = await fetch("/api/traps");
+    if (response.ok) {
+      const data = await response.json();
+      trapsData = data.traps || [];
+      $("traps").innerHTML = trapsData.map(row => `<div style="margin-bottom:4px"><span class="ok">✓</span> ${esc(row.label || row.title)} · ${esc(row.evidence || "")}</div>`).join("") || '<p class="mu">No source rows were flagged by the active data checks.</p>';
+    }
+  } catch (error) { console.error("Could not load findings", error); }
+
+  try {
+    const response = await fetch("/api/traces");
+    if (response.ok) {
+      const data = await response.json();
+      const calls = data.calls || [];
+      const groups = new Map();
+      calls.forEach(row => {
+        const group = groups.get(row.agent_name) || { calls: 0, success: 0, errors: 0, skipped: 0 };
+        group.calls++;
+        if (row.status === "SUCCESS") group.success++;
+        else if (String(row.status).startsWith("SKIPPED:")) group.skipped++;
+        else if (String(row.status).startsWith("ERROR:")) group.errors++;
+        groups.set(row.agent_name, group);
+      });
+      $("trans").innerHTML = [...groups].map(([agent, group]) => {
+        const state = group.errors ? "provider request failed or was rate-limited" : group.skipped ? "provider calls skipped after rate limit" : group.success ? "completed" : "no response";
+        return `<p><b>${esc(agent)}</b> · ${group.calls} calls · ${group.success} completed · ${group.errors} failed · ${group.skipped} skipped · ${esc(state)}</p>`;
+      }).join("") || '<p class="mu">No analysis calls have been recorded.</p>';
+    }
+  } catch (error) { console.error("Could not load analysis traces", error); }
+
+  try {
+    const response = await fetch("/api/reports/dossiers");
+    if (response.ok) {
+      dossiersData = await response.json();
+      const showList = value => Array.isArray(value) ? (value.map(item => `<li>${esc(item)}</li>`).join("") || '<li class="mu">No matching source text.</li>') : `<li>${esc(value || "No matching source text.")}</li>`;
+      $("dos").innerHTML = Object.entries(dossiersData).map(([id, dossier]) => `<details style="margin-bottom:6px"><summary><b>${esc(id)}</b> ${esc(dossier.title)}</summary><p><b>Key terms:</b> ${esc(dossier.key_terms || "")}</p><b>Uploaded obligations</b><ul>${showList(dossier.obligations)}</ul><b>Dates and notices in source</b><ul>${showList(dossier.timeline)}</ul><b>Risk-related clauses</b><ul>${showList(dossier.risks)}</ul>${dossier.citation_id ? cite(dossier.citation_id) : ""}</details>`).join("") || '<p class="mu">No contract dossiers are available.</p>';
+    }
+  } catch (error) { console.error("Could not load dossiers", error); }
+}
+
+async function reextract(exId) {
+  toast(`Re-extracting clause ${exId}...`);
+  try {
+    const res = await fetch("/api/reextract", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ extraction_id: exId })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      toast(data.message || "Clause re-extracted.");
+      await fetchTabsData();
+    }
+  } catch (e) {
+    toast("Re-extraction error.");
+  }
+}
+
+// Citations are fetched only when a result links to an uploaded source.
+async function initCitations() {}
+
+// Initial setup
+$("tabs").innerHTML = tabs.map(t => `<button data-t="${t[0]}" onclick="tab('${t[0]}')">${t[1]}</button>`).join("");
+$("fc").onchange = $("fs").onchange = render;
+$("sl").oninput = e => {
+  d = +e.target.value;
+  fetchState();
+};
+$("drop").onchange = e => {
+  currentDrop = e.target.value;
+  fetchState();
+};
+
+$("ask-form").addEventListener("submit", askQuestion);
+document.addEventListener("click", event => { const button = event.target.closest("[data-citation]"); if (button) openCite(decodeURIComponent(button.dataset.citation)); });
+// Wire up report download button in header of Reports tab
+const repDownloadBtn = document.querySelector("#p-rep button");
+if (repDownloadBtn) {
+  repDownloadBtn.onclick = () => window.open("/api/reports/company/download?format=md", "_blank");
+}
+
+lockDashboard(true);
+</script></body></html>

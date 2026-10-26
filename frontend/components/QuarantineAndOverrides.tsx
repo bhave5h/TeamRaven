@@ -7,7 +7,27 @@ import {
   AGENT_TRANSITIONS,
 } from "@/lib/odinData";
 
-export default function QuarantineAndOverrides() {
+interface QuarantineAndOverridesProps {
+  quarantined?: Array<{ source: string; raw?: string; payload?: string; reason: string }>;
+  overrides?: Array<{ label?: string; item?: string; llm?: string; llmValue?: string; python?: string; pythonValue?: string }>;
+}
+
+export default function QuarantineAndOverrides({ quarantined, overrides }: QuarantineAndOverridesProps) {
+  const displayQuarantined = quarantined && quarantined.length > 0
+    ? quarantined.map((q) => ({
+        source: q.source,
+        payload: q.raw || q.payload || "—",
+        reason: q.reason,
+      }))
+    : QUARANTINED_INPUTS;
+
+  const displayOverrides = overrides && overrides.length > 0
+    ? overrides.map((o) => ({
+        item: o.label || o.item || "Calculation Check",
+        llmValue: o.llm || o.llmValue || "—",
+        pythonValue: o.python || o.pythonValue || "—",
+      }))
+    : ARITHMETIC_OVERRIDES;
   return (
     <div className="w-full space-y-6 select-none">
       {/* Top Split: Quarantined Inputs & Arithmetic Overrides */}
@@ -42,7 +62,7 @@ export default function QuarantineAndOverrides() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#dce8e1]">
-                {QUARANTINED_INPUTS.map((item, idx) => (
+                {displayQuarantined.map((item, idx) => (
                   <tr key={idx} className="hover:bg-[#f3f8f5] transition-colors">
                     <td className="py-2 px-2.5 font-semibold text-[#14211a] whitespace-nowrap font-mono text-[11px]">
                       {item.source}
@@ -90,7 +110,7 @@ export default function QuarantineAndOverrides() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#dce8e1]">
-                {ARITHMETIC_OVERRIDES.map((item, idx) => (
+                {displayOverrides.map((item, idx) => (
                   <tr key={idx} className="hover:bg-[#f3f8f5] transition-colors">
                     <td className="py-2 px-2.5 font-semibold text-[#14211a] text-xs">
                       {item.item}

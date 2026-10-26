@@ -67,7 +67,7 @@ export default function Preloader({
         <div className="py-2">
           <InfinityLoader
             size={56}
-            className="[&>svg>path:last-child]:stroke-emerald-600 dark:[&>svg>path:last-child]:stroke-emerald-400 [&>svg>path:first-child]:stroke-gray-200 dark:[&>svg>path:first-child]:stroke-[#26262e]"
+            className="[&>svg>path:last-child]:stroke-orange-500 dark:[&>svg>path:last-child]:stroke-orange-400 [&>svg>path:first-child]:stroke-orange-100 dark:[&>svg>path:first-child]:stroke-[#382012]"
           />
         </div>
 

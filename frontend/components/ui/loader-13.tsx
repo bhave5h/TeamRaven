@@ -49,10 +49,10 @@ const InfinityLoader = React.forwardRef<HTMLDivElement, InfinityLoaderProps>(
             pathLength={100}
             d="M29.76 18.72 c0 7.28-3.92 13.6-9.84 16.96 c-2.88 1.68-6.24 2.64-9.84 2.64 c-3.6 0-6.88-0.96-9.76-2.64 c0-7.28 3.92-13.52 9.84-16.96 c2.88-1.68 6.24-2.64 9.76-2.64 S26.88 17.04 29.76 18.72 c5.84 3.36 9.76 9.68 9.84 16.96 c-2.88 1.68-6.24 2.64-9.76 2.64 c-3.6 0-6.88-0.96-9.84-2.64 c-5.84-3.36-9.76-9.68-9.76-16.96 c0-7.28 3.92-13.6 9.76-16.96 C25.84 5.12 29.76 11.44 29.76 18.72z"
           />
-          {/* Animated path using primary theme color */}
+          {/* Animated path using orange accent theme color */}
           <path
             style={{ animation: `infinity-loader-travel 2s linear infinite` }}
-            className="stroke-primary"
+            className="stroke-orange-500"
             fill="none"
             strokeWidth={4}
             strokeDasharray="15, 85"

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: odin-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_PROVIDER=groq
+      - USE_MOCK_AGENTS=true
+      - MAX_DEBATE_ROUNDS=3
+      - DB_PATH=/app/backend/db/odin.db
+      - DATA_BUNDLE_PATH=/app/backend/data/odin_dev_pack/bundle
+      - CLOCK_PATH=/app/backend/data/odin_dev_pack/clock.json
+    volumes:
+      - ./backend/data:/app/backend/data
+      - odin_db_data:/app/backend/db
+    restart: unless-stopped
+
+volumes:
+  odin_db_data:

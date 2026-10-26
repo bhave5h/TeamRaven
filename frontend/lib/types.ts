@@ -1,4 +1,4 @@
-export type CheckpointDate = "2027-03-15" | "2027-06-01" | "2027-09-15";
+export type CheckpointDate = "2027-03-15" | "2027-06-01" | "2027-09-15" | (string & {});
 
 export interface Citation {
   docId: string;

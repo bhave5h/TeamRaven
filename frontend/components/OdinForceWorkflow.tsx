@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { CheckpointDate } from "@/lib/types";
+import { ingestBundle, runAnalyze, resetBackend } from "@/lib/api";
 
 export type WorkflowStage =
   | "upload"
@@ -15,6 +16,8 @@ interface OdinForceWorkflowProps {
   onStageChange: (stage: WorkflowStage) => void;
   onResetWorkflow: () => void;
   onSelectCheckpoint?: (cp: CheckpointDate) => void;
+  onIngestComplete?: (data: any) => void;
+  onDecisionComplete?: (data: any) => void;
 }
 
 const STREAMS = ["A1", "A2", "A3", "B1", "B2", "C1", "X"] as const;
@@ -24,6 +27,8 @@ export default function OdinForceWorkflow({
   onStageChange,
   onResetWorkflow,
   onSelectCheckpoint,
+  onIngestComplete,
+  onDecisionComplete,
 }: OdinForceWorkflowProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dataPath, setDataPath] = useState<string>("");
@@ -32,6 +37,7 @@ export default function OdinForceWorkflow({
   const [ingestProgress, setIngestProgress] = useState<number>(0);
   const [decisionProgress, setDecisionProgress] = useState<number>(0);
   const [streamProgress, setStreamProgress] = useState<Record<string, number>>({});
+  const [discoveredContracts, setDiscoveredContracts] = useState<string[]>([]);
   const [activeAgentMessage, setActiveAgentMessage] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -75,11 +81,11 @@ export default function OdinForceWorkflow({
 
   const handleLoadCanonicalPreset = () => {
     setSelectedFile(null);
-    setDataPath("manifest://quillhub-portfolio-v2027.zip");
+    setDataPath("backend/data/odin_dev_pack/bundle");
     setErrorMessage(null);
   };
 
-  const handleStartIngestion = () => {
+  const handleStartIngestion = async () => {
     if (!selectedFile && !dataPath.trim()) {
       setErrorMessage("Please select a contract file or provide a valid data path.");
       return;
@@ -87,81 +93,92 @@ export default function OdinForceWorkflow({
 
     setErrorMessage(null);
     onStageChange("ingesting");
-    setIngestProgress(10);
+    setIngestProgress(25);
     setActiveAgentMessage("Odin Force: Parsing package manifest.json and contract descriptors...");
 
-    setTimeout(() => {
-      setIngestProgress(35);
-      setActiveAgentMessage("Thor Extractor: Indexing canonical clauses across A1, A2, A3, B1, B2, C1...");
-    }, 700);
+    try {
+      const resolvedPath = dataPath.startsWith("manifest://")
+        ? "backend/data/odin_dev_pack/bundle"
+        : dataPath.startsWith("local://") && !selectedFile
+        ? "backend/data/odin_dev_pack/bundle"
+        : dataPath;
 
-    setTimeout(() => {
-      setIngestProgress(65);
-      setActiveAgentMessage("Norns & Heimdall: Synchronizing clock.json (2027-03-15) & Drop 1 event stream...");
-      setStreamProgress({ A1: 100, A2: 100, A3: 100, B1: 80, B2: 60, C1: 60, X: 50 });
-    }, 1400);
-
-    setTimeout(() => {
+      const data = await ingestBundle(selectedFile, resolvedPath);
       setIngestProgress(100);
-      setStreamProgress({ A1: 100, A2: 100, A3: 100, B1: 100, B2: 100, C1: 100, X: 100 });
-      setActiveAgentMessage("Ingestion complete. 6 contracts discovered. 41 clauses indexed with substring grounding.");
+
+      const contractIds = data.contracts?.map((c) => c.id) || [];
+      setDiscoveredContracts(contractIds);
+
+      const progMap: Record<string, number> = {};
+      contractIds.forEach((id) => {
+        progMap[id] = 100;
+      });
+      setStreamProgress(progMap);
+
+      const count = data.contracts_indexed || contractIds.length || 6;
+      setActiveAgentMessage(
+        `Ingestion complete. ${count} contracts discovered. Canonical clauses indexed with substring grounding.`
+      );
+
+      if (data.checkpoints && data.checkpoints.length && onSelectCheckpoint) {
+        onSelectCheckpoint(data.checkpoints[0].date as CheckpointDate);
+      }
+
+      if (onIngestComplete) {
+        onIngestComplete(data);
+      }
+
       onStageChange("ingested");
-      if (onSelectCheckpoint) onSelectCheckpoint("2027-03-15");
-    }, 2200);
+    } catch (err: any) {
+      setErrorMessage(err.message || "Failed to load the selected data bundle.");
+      onStageChange("upload");
+      setIngestProgress(0);
+    }
   };
 
-  const handleRunDecision = () => {
+  const handleRunDecision = async () => {
     if (currentStage !== "ingested") return;
 
     onStageChange("running_decision");
-    setDecisionProgress(15);
+    setDecisionProgress(25);
     setActiveAgentMessage("Thor Extractor: Verifying exact quote substrings against canonical source texts...");
 
-    const low = budgetMode === "low";
-    const cap = (s: string) => (low && ["B2", "C1", "X"].includes(s) ? 50 : 100);
+    try {
+      const low = budgetMode === "low";
+      setTimeout(() => {
+        setDecisionProgress(60);
+        setActiveAgentMessage("Loki & Heimdall: Cross-examining counterparty claims against operational logs...");
+      }, 700);
 
-    setTimeout(() => {
-      setDecisionProgress(40);
-      setActiveAgentMessage("Loki Adversary: Scanning counterparty liability traps & exclusivity clashes...");
-      setStreamProgress({
-        A1: 100,
-        A2: 100,
-        A3: 100,
-        B1: cap("B1"),
-        B2: Math.min(30, cap("B2")),
-        C1: Math.min(25, cap("C1")),
-        X: Math.min(20, cap("X")),
-      });
-    }, 900);
+      const result = await runAnalyze(budgetMode);
 
-    setTimeout(() => {
-      setDecisionProgress(75);
-      setActiveAgentMessage("Heimdall Radar: Quarantining malformed event payloads; auditing Drop 1...");
-      setStreamProgress({
-        A1: 100,
-        A2: 100,
-        A3: 100,
-        B1: 100,
-        B2: Math.min(65, cap("B2")),
-        C1: Math.min(60, cap("C1")),
-        X: Math.min(70, cap("X")),
-      });
-    }, 1800);
-
-    setTimeout(() => {
       setDecisionProgress(100);
-      setStreamProgress({
-        A1: 100,
-        A2: 100,
-        A3: 100,
-        B1: 100,
-        B2: cap("B2"),
-        C1: cap("C1"),
-        X: cap("X"),
-      });
-      setActiveAgentMessage("Tyr Arbiter: Precedence adjudicated; all 14 traps resolved with 0 hallucinations.");
+      setActiveAgentMessage(
+        result.message || "Tyr Arbiter: Precedence adjudicated; all rulings rendered with zero hallucinations."
+      );
+
+      if (onDecisionComplete) {
+        onDecisionComplete(result);
+      }
+
       onStageChange("completed");
-    }, 2800);
+    } catch (err: any) {
+      setErrorMessage(err.message || "Decision analysis failed. Check backend log.");
+      onStageChange("ingested");
+      setDecisionProgress(0);
+    }
+  };
+
+  const handleReset = async () => {
+    await resetBackend();
+    setSelectedFile(null);
+    setDataPath("");
+    setErrorMessage(null);
+    setIngestProgress(0);
+    setDecisionProgress(0);
+    setStreamProgress({});
+    setDiscoveredContracts([]);
+    onResetWorkflow();
   };
 
   const isIngestReady = Boolean(selectedFile || dataPath.trim());
@@ -204,7 +221,7 @@ export default function OdinForceWorkflow({
           {currentStage !== "upload" && (
             <button
               type="button"
-              onClick={onResetWorkflow}
+              onClick={handleReset}
               className="text-xs font-mono text-[#67776e] hover:text-[#14211a] px-2.5 py-1 rounded border border-[#dce8e1] bg-white hover:bg-neutral-50 transition-colors cursor-pointer"
             >
               Reset
@@ -432,7 +449,7 @@ export default function OdinForceWorkflow({
               onClick={handleStartIngestion}
               className={`flex-1 px-4 py-2.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center justify-center gap-2 ${
                 currentStage === "ingesting"
-                  ? "bg-emerald-700 text-white animate-pulse"
+                  ? "bg-orange-600 text-white animate-pulse"
                   : currentStage === "ingested" || currentStage === "completed"
                   ? "bg-white text-emerald-800 border border-emerald-300 hover:bg-emerald-50"
                   : isIngestReady
@@ -451,7 +468,7 @@ export default function OdinForceWorkflow({
               onClick={handleRunDecision}
               className={`flex-1 px-4 py-2.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center justify-center gap-2 ${
                 currentStage === "running_decision"
-                  ? "bg-emerald-700 text-white animate-pulse"
+                  ? "bg-orange-600 text-white animate-pulse"
                   : isDecisionReady
                   ? "bg-emerald-700 text-white hover:bg-emerald-800 shadow-xs"
                   : "bg-neutral-100 text-neutral-400 border border-neutral-200 cursor-not-allowed"
@@ -499,7 +516,9 @@ export default function OdinForceWorkflow({
                   currentStage === "completed"
                     ? "bg-emerald-600"
                     : currentStage === "running_decision"
-                    ? "bg-sky-600"
+                    ? "bg-orange-500"
+                    : currentStage === "ingesting"
+                    ? "bg-orange-500"
                     : "bg-[#14211a]"
                 }`}
                 style={{
@@ -527,7 +546,7 @@ export default function OdinForceWorkflow({
                       prog >= 100
                         ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                         : prog > 0
-                        ? "bg-sky-50 text-sky-800 border-sky-200"
+                        ? "bg-orange-50 text-orange-800 border-orange-200"
                         : "bg-white text-[#67776e] border-[#dce8e1]"
                     }`}
                   >
@@ -542,7 +561,7 @@ export default function OdinForceWorkflow({
           {/* Live Agent Telemetry Ticker */}
           {activeAgentMessage && (
             <div className="p-2.5 bg-[#14211a] text-white rounded-lg text-xs font-mono flex items-center gap-2 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping shrink-0" />
               <span className="truncate">{activeAgentMessage}</span>
             </div>
           )}

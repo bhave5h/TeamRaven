@@ -31,13 +31,13 @@ const themes = {
     cardLineFill: "#737373",
     cardInsetColor: "0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.15 0",
   },
-  blue: {
-    backFill: "#50B1FD",
+  orange: {
+    backFill: "#ff8811ff",
     backInsetColor: "0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.35 0",
     backInsetShadow: "inset 0 0 6px 2px rgba(255,255,255,0.35)",
-    flapFill: "#3a9ae8",
+    flapFill: "#f27100ff",
     flapFillOpacity: 0.45,
-    flapStroke: "#7ec8ff",
+    flapStroke: "#eb6a00ff",
     flapInsetColor: "0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.12 0",
     cardFill: "#F1F1F1",
     cardStroke: "#E0E0E0",
@@ -54,7 +54,7 @@ const sizeScales = {
 } as const;
 
 type FolderComponentProps = Omit<React.ComponentProps<"div">, "color"> & {
-  color?: "black" | "white" | "blue";
+  color?: "black" | "white" | "orange";
   size?: "xs" | "sm" | "md" | "lg";
 };
 
@@ -65,12 +65,12 @@ const FLAP_PATH =
   "M0 25C0 11.1929 11.1929 0 25 0H136.084C143.044 0 149.689 2.90139 154.42 8.00608L178.08 33.5343C182.811 38.639 189.456 41.5404 196.416 41.5404H296C309.807 41.5404 321 52.7333 321 66.5404V216C321 229.807 309.807 241 296 241H25C11.1929 241 0 229.807 0 216V25Z";
 
 const FolderComponent = ({
-  color = "black",
+  color = "orange",
   size = "md",
   className,
   ...props
 }: FolderComponentProps) => {
-  const theme = themes[color] ?? themes.black;
+  const theme = themes[color] ?? themes.orange;
   const scale = sizeScales[size];
   const [isHovered, setIsHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
