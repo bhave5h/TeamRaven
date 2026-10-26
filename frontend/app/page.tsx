@@ -41,12 +41,80 @@ import {
   WarRoomState,
 } from "@/lib/api";
 
-type ResultTab = "all" | "war_room" | "agents" | "extractions" | "guardrails" | "reports";
+const MODULE_TABS = [
+  { id: "war_room", label: "War Room & Exposure", number: 1 },
+  { id: "agents", label: "Debate & Alerts", number: 2 },
+  { id: "extractions", label: "Thor & Tyr Rulings", number: 3 },
+  { id: "guardrails", label: "Guardrails & 14 Traps", number: 4 },
+  { id: "reports", label: "Executive Reports", number: 5 },
+] as const;
+
+type ResultTab = (typeof MODULE_TABS)[number]["id"];
+
+function ModuleNavigationFooter({
+  currentTab,
+  onSelectTab,
+}: {
+  currentTab: ResultTab;
+  onSelectTab: (tab: ResultTab) => void;
+}) {
+  const currentIndex = MODULE_TABS.findIndex((t) => t.id === currentTab);
+  const prevTab = currentIndex > 0 ? MODULE_TABS[currentIndex - 1] : null;
+  const nextTab = currentIndex < MODULE_TABS.length - 1 ? MODULE_TABS[currentIndex + 1] : null;
+
+  const handleNav = (tabId: ResultTab) => {
+    onSelectTab(tabId);
+    setTimeout(() => {
+      document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
+    }, 40);
+  };
+
+  return (
+    <div className="pt-6 mt-4 border-t border-[#dce8e1] flex items-center justify-between gap-3 flex-wrap">
+      {prevTab ? (
+        <button
+          type="button"
+          onClick={() => handleNav(prevTab.id)}
+          className="px-4 py-2.5 rounded-lg border border-[#dce8e1] bg-white hover:bg-[#f3f8f5] text-xs font-mono text-[#14211a] flex items-center gap-2 transition-all cursor-pointer shadow-2xs"
+        >
+          <span>←</span>
+          <span>Previous: <b className="font-semibold">{prevTab.label}</b></span>
+        </button>
+      ) : (
+        <div />
+      )}
+
+      <div className="text-xs font-mono text-[#67776e]">
+        Module <span className="font-semibold text-[#14211a]">{currentIndex + 1}</span> of {MODULE_TABS.length}
+      </div>
+
+      {nextTab ? (
+        <button
+          type="button"
+          onClick={() => handleNav(nextTab.id)}
+          className="px-4 py-2.5 rounded-lg border border-[#14211a] bg-[#14211a] hover:bg-[#14211a]/90 text-xs font-mono font-medium text-white flex items-center gap-2 transition-all cursor-pointer shadow-xs"
+        >
+          <span>Next: <b className="font-semibold text-white">{nextTab.label}</b></span>
+          <span>→</span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => handleNav(MODULE_TABS[0].id)}
+          className="px-4 py-2.5 rounded-lg border border-[#dce8e1] bg-white hover:bg-[#f3f8f5] text-xs font-mono text-[#14211a] flex items-center gap-2 transition-all cursor-pointer shadow-2xs"
+        >
+          <span>Return to <b>Module 1: War Room</b></span>
+          <span>↑</span>
+        </button>
+      )}
+    </div>
+  );
+}
 
 export default function Home() {
   const [currentCheckpoint, setCurrentCheckpoint] = useState<CheckpointDate>("2027-03-15");
   const [workflowStage, setWorkflowStage] = useState<WorkflowStage>("upload");
-  const [activeResultTab, setActiveResultTab] = useState<ResultTab>("all");
+  const [activeResultTab, setActiveResultTab] = useState<ResultTab>("war_room");
   const [activeCitation, setActiveCitation] = useState<Citation | null>(null);
   const [activeNotice, setActiveNotice] = useState<ActionNotice | null>(null);
   const [pipelineToast, setPipelineToast] = useState<string | null>(null);
@@ -213,73 +281,82 @@ export default function Home() {
             >
               {/* Executive Decision Banner & KPI Matrix */}
               <div className="bg-[#f3f8f5] border border-[#dce8e1] rounded-xl p-5 sm:p-7">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                  <div className="max-w-2xl">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full bg-white text-emerald-800 border border-[#dce8e1]">
-                        STEP 4 — DECISION COMPLETE
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full bg-white text-emerald-800 border border-[#dce8e1]">
+                      STEP 4 — DECISION COMPLETE
+                    </span>
+                    <span className="text-xs text-[#67776e] font-mono">
+                      Quillhub Inc. Portfolio Arbitrated
+                    </span>
+                  </div>
+                  <h2 className="mt-2.5 text-2xl sm:text-3xl font-serif font-normal text-[#14211a] tracking-tight leading-tight">
+                    Adversarial Contract Intelligence & Rulings
+                  </h2>
+                  <p className="mt-2 text-xs sm:text-sm text-[#67776e] leading-relaxed font-sans max-w-3xl">
+                    All commercial agreements deconstructed. Silent supersessions exposed, counterparty SLA asymmetries cross-examined, and binding rulings rendered under strict deterministic guardrails.
+                  </p>
+                </div>
+
+                {/* Redesigned Quick Metrics Strip (Full-width below description) */}
+                <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <div className="p-3.5 sm:p-4 bg-white border border-[#dce8e1] rounded-xl shadow-2xs hover:border-[#14211a]/25 transition-all">
+                    <span className="text-[10px] font-mono font-medium text-[#67776e] uppercase tracking-wider block">
+                      Contracts
+                    </span>
+                    <div className="mt-1 flex items-baseline gap-1.5 flex-wrap">
+                      <span className="text-lg sm:text-xl font-serif font-semibold text-[#14211a] leading-none">
+                        {warRoomState?.summary?.contract_count ?? 8}
                       </span>
-                      <span className="text-xs text-[#67776e] font-mono">
-                        Quillhub Inc. Portfolio Arbitrated
+                      <span className="text-xs font-sans text-[#67776e]">
+                        Discovered
                       </span>
                     </div>
-                    <h2 className="mt-2.5 text-2xl sm:text-3xl font-serif font-normal text-[#14211a] tracking-tight leading-tight">
-                      Adversarial Contract Intelligence & Rulings
-                    </h2>
-                    <p className="mt-2 text-xs sm:text-sm text-[#67776e] leading-relaxed font-sans">
-                      All commercial agreements deconstructed. Silent supersessions exposed, counterparty SLA asymmetries cross-examined, and binding rulings rendered under strict deterministic guardrails.
-                    </p>
+                    <span className="text-[10px] sm:text-[11px] font-mono text-emerald-700 block mt-1">
+                      ● Dynamic Ingestion
+                    </span>
                   </div>
 
-                  {/* Quick Metrics Strip */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
-                      <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
-                        Contracts
-                      </span>
-                      <span className="text-xl font-serif font-semibold text-[#14211a]">
-                        {warRoomState?.summary?.contract_count ?? 8} Discovered
-                      </span>
-                      <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
-                        Dynamic Ingestion
-                      </span>
-                    </div>
-
-                    <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
-                      <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
-                        Trap Hunter
-                      </span>
-                      <span className="text-xl font-serif font-semibold text-emerald-700">
+                  <div className="p-3.5 sm:p-4 bg-white border border-[#dce8e1] rounded-xl shadow-2xs hover:border-[#14211a]/25 transition-all">
+                    <span className="text-[10px] font-mono font-medium text-[#67776e] uppercase tracking-wider block">
+                      Trap Hunter
+                    </span>
+                    <div className="mt-1 flex items-baseline gap-1.5 flex-wrap">
+                      <span className="text-lg sm:text-xl font-serif font-semibold text-emerald-700 leading-none">
                         {trapsData?.caught_count ?? 14} / {trapsData?.total_traps ?? 14}
                       </span>
-                      <span className="text-[10px] font-mono text-emerald-800 block mt-0.5">
-                        100% Detected
-                      </span>
                     </div>
+                    <span className="text-[10px] sm:text-[11px] font-mono text-emerald-800 block mt-1">
+                      ● 100% Detected
+                    </span>
+                  </div>
 
-                    <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
-                      <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
-                        Citation Match
-                      </span>
-                      <span className="text-xl font-serif font-semibold text-[#14211a]">
+                  <div className="p-3.5 sm:p-4 bg-white border border-[#dce8e1] rounded-xl shadow-2xs hover:border-[#14211a]/25 transition-all">
+                    <span className="text-[10px] font-mono font-medium text-[#67776e] uppercase tracking-wider block">
+                      Citation Match
+                    </span>
+                    <div className="mt-1 flex items-baseline gap-1.5 flex-wrap">
+                      <span className="text-lg sm:text-xl font-serif font-semibold text-[#14211a] leading-none">
                         {guardrailsData?.citation_guardrail_pass_rate ?? "100.0%"}
                       </span>
-                      <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
-                        Zero Hallucinations
-                      </span>
                     </div>
+                    <span className="text-[10px] sm:text-[11px] font-mono text-emerald-700 block mt-1">
+                      ● Zero Hallucinations
+                    </span>
+                  </div>
 
-                    <div className="p-3 bg-white border border-[#dce8e1] rounded-lg shadow-2xs">
-                      <span className="text-[10px] font-mono text-[#67776e] uppercase tracking-wider block">
-                        Arithmetic Drift
-                      </span>
-                      <span className="text-xl font-serif font-semibold text-[#14211a]">
+                  <div className="p-3.5 sm:p-4 bg-white border border-[#dce8e1] rounded-xl shadow-2xs hover:border-[#14211a]/25 transition-all">
+                    <span className="text-[10px] font-mono font-medium text-[#67776e] uppercase tracking-wider block">
+                      Arithmetic Drift
+                    </span>
+                    <div className="mt-1 flex items-baseline gap-1.5 flex-wrap">
+                      <span className="text-lg sm:text-xl font-serif font-semibold text-[#14211a] leading-none">
                         $0.00
                       </span>
-                      <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
-                        Python Verified
-                      </span>
                     </div>
+                    <span className="text-[10px] sm:text-[11px] font-mono text-emerald-700 block mt-1">
+                      ● Python Verified
+                    </span>
                   </div>
                 </div>
 
@@ -288,40 +365,32 @@ export default function Home() {
                   <span className="text-[11px] font-mono text-[#67776e] mr-2">
                     Result View:
                   </span>
-                  {[
-                    { id: "all", label: "All Modules" },
-                    { id: "war_room", label: "War Room & Exposure" },
-                    { id: "agents", label: "Debate & Alerts" },
-                    { id: "extractions", label: "Thor & Tyr Rulings" },
-                    { id: "guardrails", label: "Guardrails & 14 Traps" },
-                    { id: "reports", label: "Executive Reports" },
-                  ].map((tab) => (
+                  {MODULE_TABS.map((tab) => (
                     <button
                       key={tab.id}
                       type="button"
-                      onClick={() => setActiveResultTab(tab.id as ResultTab)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer border ${
+                      onClick={() => setActiveResultTab(tab.id)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer border flex items-center gap-1.5 ${
                         activeResultTab === tab.id
-                          ? "bg-[#14211a] text-white border-[#14211a] font-semibold"
+                          ? "bg-[#14211a] text-white border-[#14211a] font-semibold shadow-xs"
                           : "bg-white text-[#67776e] border-[#dce8e1] hover:text-[#14211a] hover:bg-neutral-50"
                       }`}
                     >
-                      {tab.label}
+                      <span className="text-[10px] opacity-70">[{tab.number}]</span>
+                      <span>{tab.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Natural Language Query Widget (POST /api/ask) */}
-              {(activeResultTab === "all" || activeResultTab === "war_room") && (
-                <section aria-label="Natural Language Query Interface">
-                  <AskQuestionPanel onOpenCitation={handleOpenCitation} />
-                </section>
-              )}
-
               {/* MODULE GROUP 1: War Room, Time Slider, Work Plan & Graph */}
-              {(activeResultTab === "all" || activeResultTab === "war_room") && (
+              {activeResultTab === "war_room" && (
                 <div className="space-y-6 sm:space-y-8">
+                  {/* Natural Language Query Widget (POST /api/ask) */}
+                  <section aria-label="Natural Language Query Interface">
+                    <AskQuestionPanel onOpenCitation={handleOpenCitation} />
+                  </section>
+
                   {/* Temporal Checkpoint Scrubber */}
                   <section aria-label="Temporal Checkpoint Slider">
                     <TimeSlider
@@ -351,11 +420,14 @@ export default function Home() {
                       onOpenCitation={handleOpenCitation}
                     />
                   </section>
+
+                  {/* Bottom Navigation for Module 1 */}
+                  <ModuleNavigationFooter currentTab="war_room" onSelectTab={setActiveResultTab} />
                 </div>
               )}
 
               {/* MODULE GROUP 2: Multi-Agent Debate Arena & Alerts Action Center */}
-              {(activeResultTab === "all" || activeResultTab === "agents") && (
+              {activeResultTab === "agents" && (
                 <div className="space-y-6 sm:space-y-8">
                   {/* Live Multi-Agent Debate Arena */}
                   <section aria-label="Multi-Agent Debate Arena">
@@ -370,11 +442,14 @@ export default function Home() {
                       onOpenCitation={handleOpenCitation}
                     />
                   </section>
+
+                  {/* Bottom Navigation for Module 2 */}
+                  <ModuleNavigationFooter currentTab="agents" onSelectTab={setActiveResultTab} />
                 </div>
               )}
 
               {/* MODULE GROUP 3: Thor Extraction & Tyr Rulings Log */}
-              {(activeResultTab === "all" || activeResultTab === "extractions") && (
+              {activeResultTab === "extractions" && (
                 <div className="space-y-6 sm:space-y-8">
                   {/* Thor Extraction Table with Re-Extract Trigger */}
                   <section aria-label="Thor Extraction Ledger">
@@ -388,11 +463,14 @@ export default function Home() {
                   <section aria-label="Tyr Arbitration Rulings">
                     <TyrRulingsLog rulings={rulings} />
                   </section>
+
+                  {/* Bottom Navigation for Module 3 */}
+                  <ModuleNavigationFooter currentTab="extractions" onSelectTab={setActiveResultTab} />
                 </div>
               )}
 
               {/* MODULE GROUP 4: Guardrail Telemetry & Traps */}
-              {(activeResultTab === "all" || activeResultTab === "guardrails") && (
+              {activeResultTab === "guardrails" && (
                 <div className="space-y-6 sm:space-y-8">
                   {/* The 14 Traps Scoreboard */}
                   <section aria-label="The 14 Traps Matrix">
@@ -416,11 +494,14 @@ export default function Home() {
                   <section aria-label="Verification Audit Event Log">
                     <GuardrailAuditTable />
                   </section>
+
+                  {/* Bottom Navigation for Module 4 */}
+                  <ModuleNavigationFooter currentTab="guardrails" onSelectTab={setActiveResultTab} />
                 </div>
               )}
 
               {/* MODULE GROUP 5: Executive Portfolio Reports */}
-              {(activeResultTab === "all" || activeResultTab === "reports") && (
+              {activeResultTab === "reports" && (
                 <div className="space-y-6 sm:space-y-8">
                   {/* Portfolio & Analytical Report Dossiers */}
                   <section aria-label="Portfolio Reports">
@@ -430,6 +511,9 @@ export default function Home() {
                       checkpoint={currentCheckpoint}
                     />
                   </section>
+
+                  {/* Bottom Navigation for Module 5 */}
+                  <ModuleNavigationFooter currentTab="reports" onSelectTab={setActiveResultTab} />
                 </div>
               )}
             </section>
@@ -515,10 +599,10 @@ export default function Home() {
             ]}
             socials={[
               { icon: "github", href: "https://github.com/bhave5h/TeamRaven" },
-              { icon: "x", href: "https://x.com" },
-              { icon: "linkedin", href: "https://linkedin.com" },
+              { icon: "x", href: "https://x.com/BH4VE5H" },
+              { icon: "linkedin", href: "https://www.linkedin.com/in/bhaveshchawre/" },
             ]}
-            copyright="© 2027 Quillhub Inc. / TeamRaven. Ragnarok Hackathon 2026 Problem Statement 2."
+            copyright="TeamRaven. Ragnarok Hackathon 2026 Problem Statement 2."
             credit={{ label: "Team Raven", href: "https://github.com/bhave5h/TeamRaven" }}
           />
         </div>

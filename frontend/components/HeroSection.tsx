@@ -53,8 +53,8 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
             </h1>
           </div>
 
-          {/* Right: Interactive Contract Folder (Beside Headline) */}
-          <div className="shrink-0 flex items-center justify-center overflow-visible z-20">
+          {/* Right: Interactive Contract Folder (Beside Headline) - Scaled small on mobile */}
+          <div className="shrink-0 flex items-center justify-center overflow-visible z-20 scale-[0.62] sm:scale-90 md:scale-100 origin-right transition-transform">
             <FolderComponent color="orange" size="xs" />
           </div>
         </div>

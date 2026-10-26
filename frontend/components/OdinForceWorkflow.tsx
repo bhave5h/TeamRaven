@@ -333,99 +333,169 @@ export default function OdinForceWorkflow({
 
       {/* WORKFLOW INTERACTION PANEL: Steps 1, 2, 3 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column (Step 1: Upload File & Data Path) */}
-        <div className="lg:col-span-6 bg-white border border-[#dce8e1] rounded-xl p-4 sm:p-5 shadow-2xs space-y-4">
+        {/* Left Column (Step 1: Upload File & Data Path - Highlighted Starting Point) */}
+        <div className="lg:col-span-6 bg-white border-2 border-emerald-600/70 rounded-xl p-4 sm:p-5 shadow-sm space-y-4 ring-2 ring-emerald-500/10">
           <div className="flex items-center justify-between border-b border-[#dce8e1] pb-2.5">
-            <h3 className="font-serif font-normal text-base sm:text-lg text-[#14211a]">
-              Step 1 — Upload File / Data Path
-            </h3>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 animate-pulse">
+                ★ START HERE
+              </span>
+              <h3 className="font-serif font-medium text-base sm:text-lg text-[#14211a]">
+                Step 1 — Choose Source Bundle
+              </h3>
+            </div>
             <span className="text-[10px] font-mono uppercase text-[#67776e]">
-              .zip, .json, .txt, .pdf
+              2 Options Available
             </span>
           </div>
 
-          {/* Drag & Drop File Zone */}
+          {/* OPTION A: Canonical Benchmark Bundle (Highlighted) */}
           <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragOver(true);
-            }}
-            onDragLeave={() => setIsDragOver(false)}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-all ${
-              isDragOver
-                ? "border-emerald-600 bg-emerald-50/50"
-                : selectedFile
-                ? "border-emerald-500 bg-emerald-50/20"
-                : "border-[#dce8e1] hover:border-[#14211a] hover:bg-[#f8faf9]"
+            onClick={handleLoadCanonicalPreset}
+            className={`p-3.5 rounded-xl border-2 transition-all cursor-pointer ${
+              dataPath === "backend/data/odin_dev_pack/bundle" && !selectedFile
+                ? "border-emerald-600 bg-emerald-50/50 shadow-xs ring-2 ring-emerald-500/20"
+                : "border-[#dce8e1] hover:border-emerald-500/60 bg-[#f8faf9] hover:bg-white"
             }`}
           >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".zip,.json,.jsonl,.txt,.pdf"
-              className="hidden"
-              onChange={handleFileChange}
-            />
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-emerald-800 bg-white border border-emerald-200 px-2 py-0.5 rounded-md">
+                Option A · Canonical Benchmark
+              </span>
+              {dataPath === "backend/data/odin_dev_pack/bundle" && !selectedFile ? (
+                <span className="text-[11px] font-mono font-bold text-emerald-800 flex items-center gap-1">
+                  ✓ Selected
+                </span>
+              ) : (
+                <span className="text-[10px] font-mono text-[#67776e]">
+                  Click to select
+                </span>
+              )}
+            </div>
 
-            {selectedFile ? (
-              <div className="space-y-1">
-                <div className="text-sm font-mono font-semibold text-emerald-800 flex items-center justify-center gap-2">
-                  <span>📄 {selectedFile.name}</span>
-                </div>
-                <p className="text-[11px] font-mono text-[#67776e]">
-                  {(selectedFile.size / 1024).toFixed(1)} KB • Ready for Ingestion
-                </p>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedFile(null);
-                    setDataPath("");
-                  }}
-                  className="mt-1 text-[11px] font-mono text-red-600 hover:underline"
-                >
-                  Remove file
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-1 text-[#67776e]">
-                <div className="text-xs font-mono font-semibold text-[#14211a]">
-                  Click to select contract bundle or drag & drop here
-                </div>
-                <p className="text-[11px] font-sans">
-                  Supports .zip packages with manifest.json, canonical clauses, and event logs
+            <div className="mt-2 flex items-center justify-between gap-3">
+              <div>
+                <h4 className="text-xs sm:text-sm font-serif font-semibold text-[#14211a]">
+                  Quillhub Inc. Enterprise Portfolio
+                </h4>
+                <p className="text-[11px] font-sans text-[#67776e] mt-0.5">
+                  8 contracts, 32 clauses, 14 adversarial traps & 3 temporal drops.
                 </p>
               </div>
-            )}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleLoadCanonicalPreset();
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all shrink-0 cursor-pointer ${
+                  dataPath === "backend/data/odin_dev_pack/bundle" && !selectedFile
+                    ? "bg-emerald-800 text-white shadow-xs"
+                    : "bg-white text-[#14211a] border border-[#dce8e1] hover:border-[#14211a]"
+                }`}
+              >
+                ⚡ Use Benchmark
+              </button>
+            </div>
           </div>
 
-          {/* Data Path Input */}
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-mono text-[#67776e] block uppercase tracking-wider">
-              Or specify repository / bundle data path:
-            </label>
-            <div className="flex gap-2">
+          {/* OPTION B: Custom Bundle Upload / Path (Highlighted) */}
+          <div
+            className={`p-3.5 rounded-xl border-2 transition-all ${
+              selectedFile || (dataPath && dataPath !== "backend/data/odin_dev_pack/bundle")
+                ? "border-emerald-600 bg-emerald-50/40 shadow-xs ring-2 ring-emerald-500/20"
+                : "border-[#dce8e1] bg-[#f8faf9]"
+            }`}
+          >
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-emerald-800 bg-white border border-emerald-200 px-2 py-0.5 rounded-md">
+                Option B · Custom Upload or Path
+              </span>
+              {(selectedFile || (dataPath && dataPath !== "backend/data/odin_dev_pack/bundle")) && (
+                <span className="text-[11px] font-mono font-bold text-emerald-800 flex items-center gap-1">
+                  ✓ Selected
+                </span>
+              )}
+            </div>
+
+            {/* Drag & Drop File Zone */}
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragOver(true);
+              }}
+              onDragLeave={() => setIsDragOver(false)}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`border border-dashed rounded-lg p-3 text-center cursor-pointer transition-all ${
+                isDragOver
+                  ? "border-emerald-600 bg-emerald-50/70"
+                  : selectedFile
+                  ? "border-emerald-500 bg-white"
+                  : "border-[#dce8e1] hover:border-[#14211a] bg-white hover:bg-neutral-50"
+              }`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".zip,.json,.jsonl,.txt,.pdf"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
+              {selectedFile ? (
+                <div className="space-y-0.5">
+                  <div className="text-xs font-mono font-semibold text-emerald-800 flex items-center justify-center gap-2">
+                    <span>📄 {selectedFile.name}</span>
+                  </div>
+                  <p className="text-[10px] font-mono text-[#67776e]">
+                    {(selectedFile.size / 1024).toFixed(1)} KB • Custom package ready
+                  </p>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedFile(null);
+                      setDataPath("backend/data/odin_dev_pack/bundle");
+                    }}
+                    className="text-[10px] font-mono text-red-600 hover:underline"
+                  >
+                    Remove file
+                  </button>
+                </div>
+              ) : (
+                <div className="text-[#67776e]">
+                  <div className="text-xs font-mono font-medium text-[#14211a]">
+                    Upload custom contract package (.zip, .json, .txt, .pdf)
+                  </div>
+                  <p className="text-[10px] font-sans mt-0.5">
+                    Drag & drop file or click to browse
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Custom Data Path Input */}
+            <div className="mt-2.5">
+              <label className="text-[10px] font-mono text-[#67776e] block uppercase tracking-wider mb-1">
+                Or enter local server directory / manifest path:
+              </label>
               <input
                 type="text"
-                value={dataPath}
+                value={dataPath === "backend/data/odin_dev_pack/bundle" && !selectedFile ? "" : dataPath}
                 onChange={(e) => {
                   setDataPath(e.target.value);
                   setSelectedFile(null);
                 }}
-                placeholder="e.g. data/quillhub_portfolio/ or manifest.json"
-                className="flex-1 text-xs font-mono px-3 py-2 border border-[#dce8e1] rounded-lg bg-white focus:outline-none focus:border-[#14211a]"
+                placeholder="e.g. data/my_custom_bundle/ or manifest.json"
+                className="w-full text-xs font-mono px-3 py-1.5 border border-[#dce8e1] rounded-lg bg-white focus:outline-none focus:border-[#14211a]"
               />
-              <button
-                type="button"
-                onClick={handleLoadCanonicalPreset}
-                className="px-3 py-2 rounded-lg bg-[#f3f8f5] hover:bg-[#e8f2ec] border border-[#dce8e1] text-[11px] font-mono font-medium text-[#14211a] whitespace-nowrap cursor-pointer transition-colors"
-                title="Load standard 6-contract canonical benchmark bundle"
-              >
-                Use Benchmark Bundle
-              </button>
             </div>
+          </div>
+
+          <div className="pt-1 text-[11px] font-mono text-[#67776e] flex items-center justify-between">
+            <span>👉 Selected: <b className="text-[#14211a]">{selectedFile ? selectedFile.name : dataPath ? "Quillhub Benchmark" : "None"}</b></span>
+            <span className="text-emerald-700 font-semibold">Proceed to Step 2 →</span>
           </div>
         </div>
 
