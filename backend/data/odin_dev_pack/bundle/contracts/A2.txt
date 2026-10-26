@@ -1,0 +1,10 @@
+STRATONODE CORP. SERVICE LEVEL AGREEMENT SCHEDULE
+Doc ID: A2.txt
+Effective Date: 2026-03-01
+Counterparty: StratoNode Corp.
+
+§3.1 Service Credit Process.
+Customer must submit written notification of an SLA Credit claim within thirty (30) calendar days of the month-end in which the downtime incident occurred. Failure to submit within 30 days forfeits all credit remedies.
+
+§3.2 Calculation of Credits.
+If uptime falls between 99.0% and 99.49%, Customer is entitled to a 10% credit. If uptime falls below 99.0%, Customer is entitled to a 25% credit applied against future monthly invoices.

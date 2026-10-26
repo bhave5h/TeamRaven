@@ -1,0 +1,13 @@
+HARBOR RETAIL SYSTEMS ENTERPRISE CUSTOMER AGREEMENT
+Doc ID: B1.txt
+Effective Date: 2026-04-15
+Counterparty: Harbor Retail Systems
+
+§2. Service Level Commitments.
+Quillhub warrants a Monthly Uptime Percentage of 99.9% for the Harbor Retail portal. Downtime below 99.9% incurs a penalty of $2,500 per 0.1% degradation.
+
+§6. Notice and Grace Period.
+Harbor Retail must provide Quillhub ninety (90) calendar days written notice prior to any renewal date to terminate or modify the commercial tier.
+
+§8. Force Majeure and Upstream Outages.
+Neither party shall be liable for failure to perform resulting from catastrophic cloud provider outages, provided immediate notice is given within five (5) business days.

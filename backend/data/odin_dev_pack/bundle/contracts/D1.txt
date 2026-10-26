@@ -1,0 +1,10 @@
+AEGIS CYBER RISK INSURANCE POLICY
+Doc ID: D1.txt
+Effective Date: 2026-10-01
+Counterparty: Aegis Underwriting
+
+§2. Coverage and Breach Notification.
+Coverage requires written notice of any potential system breach, ransomware incident, or major cloud hosting failure within seventy-two (72) hours of discovery.
+
+§5. Policy Expiration and Renewal.
+Policy coverage terminates on October 1, 2027 unless renewed thirty (30) days in advance with updated risk assessment reports.

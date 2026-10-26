@@ -1,0 +1,18 @@
+QUILLHUB INC. MASTER SERVICES AGREEMENT AND STANDARD COMMERCIAL TERMS
+Doc ID: STD.txt
+Effective Date: 2026-01-01
+
+Section 1.1 Scope and Provision of Services.
+Quillhub Inc. provides enterprise contract intelligence and analytics services.
+
+Section 1.4 Order of Precedence.
+In the event of any conflict between this Agreement and any Service Schedule, the terms of the applicable Service Schedule shall control, unless an amendment explicitly specifies otherwise. Any conflicting counterparty standard terms are expressly subordinated to this Agreement.
+
+Section 5.1 Payment Terms.
+All fees shall be invoiced monthly in advance and are payable within thirty (30) calendar days of invoice receipt. Uncontested delinquent balances accrue interest at 1.5% per month.
+
+Section 9.2 Limitation of Liability.
+Each party's aggregate cumulative liability under this Agreement shall not exceed the total fees paid or payable by Customer in the preceding twelve (12) months, except for gross negligence, willful misconduct, or breach of confidentiality obligations.
+
+Section 11.3 Governing Law and Dispute Notice.
+Any formal dispute, breach notification, or escalation notice must be transmitted in writing to legal-notices@quillhub.com.

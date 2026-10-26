@@ -1,0 +1,4 @@
+{"event_id": "EVT-201", "timestamp": "2027-06-22T16:00:00Z", "event_type": "outage_incident", "contract_id": "B2", "summary": "Vantage Logistics integration gateway unavailable for 38 minutes", "payload_json": "{\"outage_minutes\": 38, \"exposure_cents\": 350000}"}
+{"event_id": "EVT-202", "timestamp": "2027-07-04T12:00:00Z", "event_type": "audit_notice", "contract_id": "C1", "summary": "Nexus contractor timesheet discrepancy flagged by finance", "payload_json": "{\"flagged_hours\": 32, \"amount\": 480000}"}
+{"event_id": "EVT-203", "timestamp": "2027-08-15T10:30:00Z", "event_type": "policy_renewal", "contract_id": "D1", "summary": "Aegis Cyber Insurance 45-day renewal assessment window opened", "payload_json": "{\"status\": \"action_required\"}"}
+{CORRUPTED_JSON_STREAM_DROP2_LINE_4: INVALID_EOF

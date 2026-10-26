@@ -1,0 +1,16 @@
+STRATONODE CORP. CLOUD HOSTING INFRASTRUCTURE AGREEMENT
+Doc ID: A1.txt
+Effective Date: 2026-03-01
+Counterparty: StratoNode Corp.
+
+§1. Services Provided.
+StratoNode agrees to provide managed cloud compute and database hosting services to Quillhub Inc.
+
+§4.2 Service Availability.
+StratoNode warrants that the Production Cloud Environment shall maintain a Monthly Uptime Percentage of not less than 99.5% during each calendar month. Downtime shall be calculated as total minutes of service unavailability excluding scheduled maintenance.
+
+§4.3 Exclusivity and Non-Compete.
+During the Term, Customer shall utilize StratoNode as its primary cloud compute provider for core AI operations, subject to StratoNode meeting all availability targets.
+
+§7.1 Notice Requirements.
+Any notice of breach, outage dispute, or SLA failure must be delivered in writing within thirty (30) days of the triggering incident to legal@stratonode.io.

@@ -1,0 +1,13 @@
+VANTAGE LOGISTICS ENTERPRISE CUSTOMER AGREEMENT
+Doc ID: B2.txt
+Effective Date: 2026-07-01
+Counterparty: Vantage Logistics Inc.
+
+§1. Scope of Implementation.
+Quillhub shall deploy the autonomous contract workflow by September 1, 2027.
+
+§3. SLA Penalties and Offset.
+Vantage Logistics shall be entitled to an immediate fee offset of $5,000 per business day for unexcused implementation delays exceeding fourteen (14) days.
+
+§9. Governing Law and Arbitration.
+Any dispute shall be adjudicated under American Arbitration Association (AAA) commercial rules.

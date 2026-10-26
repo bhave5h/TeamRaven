@@ -1,0 +1,10 @@
+STRATONODE CORP. FIRST AMENDMENT TO SLA SCHEDULE
+Doc ID: A3.txt
+Effective Date: 2026-09-01
+Counterparty: StratoNode Corp.
+
+§1. Amendment of Credit Claim Window.
+Section 3.1 of Schedule A2 is hereby amended and superseded in its entirety: Customer must submit written notification of an SLA Credit claim within sixty (60) calendar days of the month-end in which the downtime incident occurred.
+
+§2. Precedence.
+In the event of any contradiction between this First Amendment (A3) and the SLA Schedule (A2) or Master Agreement (A1), the terms of this First Amendment shall strictly govern.

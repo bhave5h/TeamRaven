@@ -1,0 +1,56 @@
+{
+  "company": {
+    "name": "Quillhub Inc.",
+    "description": "Enterprise Contract Intelligence Platform"
+  },
+  "contracts": [
+    {
+      "id": "STD",
+      "title": "Standard Commercial Terms (Master)",
+      "counterparty": "Quillhub Inc. (Standard)",
+      "path": "contracts/STD.txt"
+    },
+    {
+      "id": "A1",
+      "title": "StratoNode Cloud Hosting Agreement",
+      "counterparty": "StratoNode Corp.",
+      "path": "contracts/A1.txt"
+    },
+    {
+      "id": "A2",
+      "title": "StratoNode SLA Schedule (Superseded)",
+      "counterparty": "StratoNode Corp.",
+      "path": "contracts/A2.txt"
+    },
+    {
+      "id": "A3",
+      "title": "StratoNode First SLA Amendment (Governing)",
+      "counterparty": "StratoNode Corp.",
+      "path": "contracts/A3.txt"
+    },
+    {
+      "id": "B1",
+      "title": "Harbor Retail Customer Agreement",
+      "counterparty": "Harbor Retail Systems",
+      "path": "contracts/B1.txt"
+    },
+    {
+      "id": "B2",
+      "title": "Vantage Logistics Enterprise Agreement",
+      "counterparty": "Vantage Logistics Inc.",
+      "path": "contracts/B2.txt"
+    },
+    {
+      "id": "C1",
+      "title": "Nexus Contractor Talent Agreement",
+      "counterparty": "Nexus Talent Agency",
+      "path": "contracts/C1.txt"
+    },
+    {
+      "id": "D1",
+      "title": "Aegis Cyber Insurance Policy",
+      "counterparty": "Aegis Underwriting",
+      "path": "contracts/D1.txt"
+    }
+  ]
+}
