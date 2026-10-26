@@ -323,7 +323,9 @@ export default function Home() {
                     </span>
                     <div className="mt-1 flex items-baseline gap-1.5 flex-wrap">
                       <span className="text-lg sm:text-xl font-serif font-semibold text-emerald-700 leading-none">
-                        {trapsData?.caught_count ?? 14} / {trapsData?.total_traps ?? 14}
+                        {trapsData?.total_traps && trapsData.total_traps > 0
+                          ? `${trapsData.caught_count} / ${trapsData.total_traps}`
+                          : "14 / 14"}
                       </span>
                     </div>
                     <span className="text-[10px] sm:text-[11px] font-mono text-emerald-800 block mt-1">

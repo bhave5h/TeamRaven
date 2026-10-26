@@ -21,8 +21,8 @@ export default function Logo() {
       <Image
         src="/logo.png"
         alt="Odin Logo"
-        width={28}
-        height={28}
+        width={33}
+        height={33}
         className="object-contain shrink-0"
       />
       <div className="flex flex-col">

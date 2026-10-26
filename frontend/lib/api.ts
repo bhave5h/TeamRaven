@@ -141,7 +141,12 @@ export async function ingestBundle(
     });
   }
 
-  const data = await res.json();
+  let data: any = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = { ok: res.ok, message: `Server response: ${res.status}` };
+  }
   if (!res.ok || !data.ok) {
     throw new Error(data.message || data.detail || `Ingestion failed (${res.status})`);
   }
@@ -154,7 +159,12 @@ export async function runAnalyze(budget: "full" | "low" = "full"): Promise<Analy
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ budget }),
   });
-  const data = await res.json();
+  let data: any = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = { ok: res.ok, message: `Server response: ${res.status}` };
+  }
   if (!res.ok || !data.ok) {
     throw new Error(data.detail || data.message || `Analysis failed (${res.status})`);
   }

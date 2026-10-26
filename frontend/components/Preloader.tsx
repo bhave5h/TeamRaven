@@ -10,7 +10,7 @@ interface PreloaderProps {
 }
 
 export default function Preloader({
-  minDuration = 1100,
+  minDuration = 2800,
   onFinish,
 }: PreloaderProps) {
   const [phase, setPhase] = useState<"loading" | "fading" | "done">("loading");
@@ -59,25 +59,22 @@ export default function Preloader({
     >
       <div className="flex flex-col items-center max-w-sm px-6 text-center space-y-6">
         {/* Brand Shield & Title */}
-        <div className="scale-110">
+        <div className="scale-150">
           <Logo />
         </div>
 
         {/* The InfinityLoader Component */}
         <div className="py-2">
           <InfinityLoader
-            size={56}
+            size={90}
             className="[&>svg>path:last-child]:stroke-orange-500 dark:[&>svg>path:last-child]:stroke-orange-400 [&>svg>path:first-child]:stroke-orange-100 dark:[&>svg>path:first-child]:stroke-[#382012]"
           />
         </div>
 
         {/* Tactical Status Ticker */}
         <div className="space-y-1.5">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#191919] dark:text-[#f4f4f6] font-semibold">
+          <p className="font-mono text-[15px] uppercase tracking-[0.18em] text-[#191919] dark:text-[#f4f4f6] font-semibold">
             {statusText}
-          </p>
-          <p className="font-mono text-[10px] text-[#191919]/50 dark:text-neutral-500">
-            Autonomous Multi-Agent Contract Intelligence
           </p>
         </div>
 
@@ -87,7 +84,7 @@ export default function Preloader({
             setPhase("fading");
             setTimeout(() => setPhase("done"), 200);
           }}
-          className="text-[10px] font-mono text-[#191919]/40 dark:text-neutral-600 hover:text-[#191919] dark:hover:text-neutral-400 transition-colors pt-2 cursor-pointer"
+          className="text-[10px] font-mono text-[#191919]/40 dark:text-neutral-600 hover:text-[#191919] dark:hover:text-neutral-400 transition-colors pt-1 cursor-pointer"
         >
           [Press or click to skip intro]
         </button>

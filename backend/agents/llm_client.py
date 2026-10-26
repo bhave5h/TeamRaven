@@ -33,15 +33,24 @@ class LLMClient:
 
     @staticmethod
     def _clean_json_response(content: str) -> str:
-        """Strips markdown code fences and whitespace from LLM output."""
+        """Strips markdown code fences and whitespace from LLM output, extracting pure JSON."""
         cleaned = content.strip()
-        if cleaned.startswith("```json"):
-            cleaned = cleaned[7:]
-        elif cleaned.startswith("```"):
-            cleaned = cleaned[3:]
-        if cleaned.endswith("```"):
-            cleaned = cleaned[:-3]
-        return cleaned.strip()
+        fence_match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", cleaned)
+        if fence_match:
+            cleaned = fence_match.group(1).strip()
+        
+        brace_start = cleaned.find("{")
+        bracket_start = cleaned.find("[")
+        if brace_start != -1 and (bracket_start == -1 or brace_start < bracket_start):
+            brace_end = cleaned.rfind("}")
+            if brace_end != -1:
+                return cleaned[brace_start:brace_end + 1].strip()
+        elif bracket_start != -1:
+            bracket_end = cleaned.rfind("]")
+            if bracket_end != -1:
+                return cleaned[bracket_start:bracket_end + 1].strip()
+
+        return cleaned
 
     @classmethod
     def call_json(
@@ -104,15 +113,20 @@ class LLMClient:
         import anthropic
         client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY, max_retries=0)
 
-        response = client.messages.create(
-            model=settings.ANTHROPIC_MODEL,
-            max_tokens=settings.MAX_TOKENS_PER_CALL,
-            temperature=settings.LLM_TEMPERATURE,
-            system=system_prompt,
-            messages=[{"role": "user", "content": user_prompt}]
-        )
+        kwargs: dict[str, Any] = {
+            "model": settings.ANTHROPIC_MODEL,
+            "max_tokens": settings.MAX_TOKENS_PER_CALL,
+            "system": system_prompt,
+            "messages": [{"role": "user", "content": user_prompt}],
+        }
+        response = client.messages.create(**kwargs)
 
-        content = response.content[0].text if response.content else ""
+        content = ""
+        for block in getattr(response, "content", []):
+            if hasattr(block, "text"):
+                content += block.text
+            elif getattr(block, "type", None) == "text":
+                content += getattr(block, "text", "")
         p_tokens = getattr(response.usage, "input_tokens", 0)
         c_tokens = getattr(response.usage, "output_tokens", 0)
         return content, p_tokens, c_tokens

@@ -31,11 +31,11 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
 
           {/* Procedural pointer-reactive ASCII embers on top of hero image */}
           <Motes
-            effect="embers"
+            effect="smoke"
             pointer
             radius={70}
             force={1.1}
-            accent="#ddeafe"
+            accent="#ff6a00"
             background="transparent"
             className="absolute inset-0 z-10 h-full w-full pointer-events-auto"
           />
@@ -43,7 +43,7 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
       </div>
 
       {/* 2. Compact Headline & Interactive Folder Row */}
-      <div className="w-full px-[clamp(20px,3.2vw,30px)] py-4 sm:py-6">
+      <div className="w-full px-[clamp(20px,3.2vw,30px)] py-4 sm:py-4">
         <div className="flex items-center justify-between gap-4 sm:gap-8 max-w-4xl">
           {/* Left: 2-Line Serif Display Heading */}
           <div className="min-w-0">
@@ -54,7 +54,7 @@ export default function HeroSection({ onTriggerAnalysis }: HeroSectionProps) {
           </div>
 
           {/* Right: Interactive Contract Folder (Beside Headline) - Scaled small on mobile */}
-          <div className="shrink-0 flex items-center justify-center overflow-visible z-20 scale-[0.62] sm:scale-90 md:scale-100 origin-right transition-transform">
+          <div className="shrink-0 flex items-center justify-left overflow-visible z-20 scale-[0.62] sm:scale-90 md:scale-90 origin-left transition-transform">
             <FolderComponent color="orange" size="xs" />
           </div>
         </div>

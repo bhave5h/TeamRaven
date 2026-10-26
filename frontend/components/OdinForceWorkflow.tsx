@@ -317,19 +317,7 @@ export default function OdinForceWorkflow({
         </div>
       </div>
 
-      {/* ERROR MESSAGE DISPLAY */}
-      {errorMessage && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs font-mono text-red-800 flex items-center justify-between">
-          <span>⚠️ {errorMessage}</span>
-          <button
-            type="button"
-            onClick={() => setErrorMessage(null)}
-            className="text-red-600 hover:text-red-900 text-sm font-bold"
-          >
-            ×
-          </button>
-        </div>
-      )}
+      {/* ERROR MESSAGE DISPLAY - Hidden per user request */}
 
       {/* WORKFLOW INTERACTION PANEL: Steps 1, 2, 3 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
